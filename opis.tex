@@ -1,0 +1,37 @@
+\documentclass[12pt, A4]{article}
+\usepackage{polski}
+\usepackage[utf8]{inputenc}\usepackage{geometry}
+\usepackage{amsmath}
+\geometry{margin=1in}
+\title{OOP project: \par "Minesweeper+"}
+\author{Bartosz Bromblik, Jakub Pazdro, Jakub Wieliczko}
+\date{}
+\begin{document}
+\maketitle
+\section{Opis}
+Naszym projektem jest stworzenie klasycznej wersji "Sapera" (ang. "Minesweeper"). Ale ponadto planujemy zrobienie wersji trójwymiarowej tej gry. Potencjalne funkcjonalności opisane są poniżej.
+
+\subsection{Przypomnienie podstawowych zasad}
+Plansza jest rozmiaru $n \times m$ i znajduje się na niej $k$ min. Celem gry jest odkrycie dokładnie $nm-k$ pól tak, by żadna z min nie została odkryta. Innymi słowy należy odkryć wszystkie niezaminowane pola. \par
+Każde pole może zawierać minę lub jej nie zawierać. Po kliknięciu opcje są następujące:
+\begin{itemize}
+\item Jeśli pole zawiera minę, to gra kończy się natychmiast.
+\item Jeśli pole jest puste, ale co najmniej jedno z pól sąsiadujących pól (w podstawowej wersji: po bokach i wierzchołkach, potencjalnie aż 8 pól) zawiera minę, to w tym polu wyświetlana jest ilość min w polach sąsiadujących.
+\item Jeśli pole jest puste oraz żadne z pól sąsiadujących nie zawiera miny to w tym polu nie jest wyświetlana żadna wartość.
+\end{itemize}
+
+\subsection{Proponowane dodatkowe funkcjonalności}
+Generalnym pomysłem działania wersji 3D jest, by plansza była rozmiaru $m*n*p$ oraz była opcja (np. suwak) przechodzenia między różnymi głębokościami. Do tego sąsiadujące pola to nie tylko te 8 na tym samym poziomie ale aż do 26 pól sąsiadujących na każdy możliwy sposób (bok, krawędź i wierzchołek). Poza tym zasady są takie same jak w wersji podstawowej. \par
+Spodziewamy się jednak trudności z czytelnością tej wersji. Mamy jednak kilka pomysłów co może pomóc:
+\begin{itemize}
+\item Ograniczenie zbioru pól sąsiadujących do 18 (po bokach oraz krawędziach) lub 10 (cały ten sam poziom oraz pola bezpośrednio pod oraz nad) lub 8 (jak w klasycznej wersji) lub 6 (tylko po bokach).
+\item Dodanie opcji wyświetlania jedynie pól nieodkrytych i sąsiadujących z polami które potencjalnie mogą zawierać minę. Pozostałe byłyby ukryte. Innymi słowy gdy zaznaczymy dane niezaznaczone pole jako zawierające minę a następnie zaznaczymy tą opcję, to zaznaczona właśnie mina będzie już niewidoczna oraz od wszystkich sąsiadujących pól zostanie odjęte $1$. Po skończeniu gry i zaznaczeniu tej opcji mapa gry będzie pusta.
+\item Prześwitywanie pól poniżej. Tj. jeśli na danym poziomie pewne pole jest puste, to widoczne jest pole bezpośrednio pod nim (wygląda inaczej niż samo to pole poniżej, np. inne cieniowanie). Jeśli pole poniżej też jest puste, to również prześwituje. Itd. Powodowałoby to ciekawy efekt głębii.
+\item Poza ogólnym licznikiem wszystkich niezaznaczonych min każdy poziom posiada swój własny licznik min pozostałych do odkrycia na tym właśnie poziomie.
+\end{itemize}
+
+\section{Framework}
+Jako Framework przy użyciu którego planujemy zaimplementowanać „Minesweeper+” wybraliśmy libGDX, czyli bibliotekę służącą do tworzenia gier (głównie 2D). Jest to dobry wybór, z uwagi na jego popularność, ciągłe wsparcie i regularne akutalizacje, kompatybilność między różnymi platformami (biblioteka obsługuje Windows, Linux oraz MacOS) i łatwość w obsłudze. Ponadto biblioteka zawiera wszystkie elementy których potrzebujemy. Funkcjonalności z których będziemy korzystać to m.in. przechwytywanie wejścia z klawiatury (i/lub myszki), tworzenie aplikacji okienkowej, obsługa UI oraz render grafiki 2D przy generowaniu poziomów, tekstury/animacje i efekty dźwiekowe.
+
+
+\end{document}
