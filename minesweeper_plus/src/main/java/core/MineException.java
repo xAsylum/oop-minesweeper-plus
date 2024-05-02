@@ -1,9 +1,7 @@
 package core;
 
 public class MineException extends Exception {
-    String err;
+    int x; int y;
+    MineException(int x, int y){this.x=x; this.y=y;}
     MineException(){}
-    MineException(String s){
-        err=s;
-    }
 }
