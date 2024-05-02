@@ -40,7 +40,7 @@ public class MyGdxGame extends ApplicationAdapter {		//to be deleted, only as te
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
 			x-=50;
 		}
-
+        int cos;
 
 		batch.draw(img, (int)x,(int)y);
 		batch.end();
