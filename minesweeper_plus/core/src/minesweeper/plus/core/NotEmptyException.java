@@ -1,13 +1,9 @@
 package minesweeper.plus.core;
 
 public class NotEmptyException extends Exception {
-    int x;
-    int y;
-    int z;
+    Coordinates field;
     public NotEmptyException() {};
-    public NotEmptyException (int x, int y, int z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    public NotEmptyException (Coordinates guess) {
+        this.field = guess;
     }
 }

@@ -1,13 +1,9 @@
 package minesweeper.plus.core;
 
 public class MineException extends Exception {
-    int x;
-    int y;
-    int z;
+    Coordinates field;
     public MineException() {};
-    public MineException (int x, int y, int z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+    public MineException (Coordinates guess) {
+        this.field = guess;
     }
 }
