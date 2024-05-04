@@ -3,11 +3,11 @@ package minesweeper.plus.core;
 import java.util.*;
 
 public class SimpleMinefield implements Minefield {
-    private int width, height, depth, noMines;
-    private Proximity proxy;
-    private boolean[][][] table;
+    private final int width, height, depth, noMines;
+    private final Proximity proxy;
+    private final boolean[][][] table;
 
-    public Minefield newField(int width, int height, int depth, int noMines, Coordinates firstGuess) throws OutOfBoundsException {
+    public SimpleMinefield(int width, int height, int depth, int noMines, Coordinates firstGuess) throws OutOfBoundsException {
         this.width = width;
         this.height = height;
         this.depth = depth;
@@ -44,8 +44,6 @@ public class SimpleMinefield implements Minefield {
             }
         }           //placing the mines
         table[firstGuess.xValue][firstGuess.yValue][firstGuess.yValue] = false;
-
-        return this;
     }
 
     @Override

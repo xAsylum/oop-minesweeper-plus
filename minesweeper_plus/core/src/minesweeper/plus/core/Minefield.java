@@ -6,7 +6,8 @@ import java.util.Set;
 //creates and stores the minefield and answers questions about it
 public interface Minefield {
 
-    Minefield newField(int width, int height, int depth, int noMines, Coordinates firstGuess) throws OutOfBoundsException;
+//    Minefield (int width, int height, int depth, int noMines, Coordinates firstGuess) throws OutOfBoundsException;
+    // constructor will look like this
     Coordinates getSize();
 
     int clickThis(Coordinates guess) throws MineException, OutOfBoundsException;
