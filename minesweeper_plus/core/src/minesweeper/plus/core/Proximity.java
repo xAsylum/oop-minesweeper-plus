@@ -1,10 +1,9 @@
 package minesweeper.plus.core;
 
-import java.util.ArrayList;
+import java.util.Set;
 
 //there could be different types of proximity,
 public interface Proximity {
-    int count(Coordinates guess);
-    ArrayList<Coordinates> neighbourhood(Coordinates guess) throws OutOfBoundsException;
+    Set<Coordinates> neighbourhood(Coordinates guess);
     //list of fields nearby in the given proximity
 }
