@@ -51,6 +51,34 @@ public class SimpleMinefield implements Minefield {
         return new Coordinates(width, height, depth);
     }
 
+
+    //intantiateClick - method to get connected component of the board, bounded by nonzero fields
+    public Set<Map.Entry<Coordinates, Integer>> instantiateClick(Coordinates guess) throws OutOfBoundsException, MineException {
+        Set<Map.Entry<Coordinates, Integer>> result = new HashSet<>();
+        int r0 = clickThis(guess);
+        Map.Entry<Coordinates, Integer> e0 = new AbstractMap.SimpleEntry<>(guess, r0);
+        result.add(e0);
+        if(r0 == 0) { //proceed futher only if blankspace
+            Set<Coordinates> visited = new HashSet<>();
+            Queue<Map.Entry<Coordinates, Integer>> bfs = new ArrayDeque<>(); //setup bfs
+            bfs.add(e0);
+            while(!bfs.isEmpty()) {
+                Map.Entry<Coordinates, Integer> front = bfs.remove();
+                visited.add(front.getKey()); //mark as visited
+                result.add(front); //add to connected component
+                if (front.getValue() == 0) //only go further if blank space
+                    for (Coordinates c : proxy.neighbourhood(front.getKey())) {
+                        if (!visited.contains(c))
+                            try {
+                                int v = clickThis(c); //get value - guarenteed not to be a bomb because front.getValue() == 0
+                                bfs.add(new AbstractMap.SimpleEntry<>(c, v));
+                            } catch (MineException ignored) { } //exception will never occur, language barrier
+                    }
+            }
+        }
+        return  result;
+    }
+
     @Override
     public int clickThis(Coordinates guess) throws MineException, OutOfBoundsException {
         if(!guess.bounded(getSize()))
