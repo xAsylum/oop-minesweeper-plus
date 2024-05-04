@@ -53,6 +53,7 @@ public class SimpleMinefield implements Minefield {
 
 
     //intantiateClick - method to get connected component of the board, bounded by nonzero fields
+    @Override
     public Set<Map.Entry<Coordinates, Integer>> instantiateClick(Coordinates guess) throws OutOfBoundsException, MineException {
         Set<Map.Entry<Coordinates, Integer>> result = new HashSet<>();
         int r0 = clickThis(guess);

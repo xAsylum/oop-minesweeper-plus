@@ -10,9 +10,13 @@ public interface Minefield {
     // constructor will look like this
     Coordinates getSize();
 
+    //intantiateClick - method to get connected component of the board, bounded by nonzero fields
+    Set<Map.Entry<Coordinates, Integer>> instantiateClick(Coordinates guess) throws OutOfBoundsException, MineException;
+
+    //returns no. mines in proximity of this field
+    //OR MineException if mine OR OutOfBounds if out of bounds
     int clickThis(Coordinates guess) throws MineException, OutOfBoundsException;
-                //returns #mines in proximity of this field
-                //OR MineException if mine OR OutOfBounds if out of bounds
+
     Set<Map.Entry<Coordinates, Integer>> getNeighbourhood (Coordinates guess) throws NotEmptyException, OutOfBoundsException;
                 //quick-clear empty areas, returns an entrySet
 
