@@ -48,11 +48,11 @@ public class SimpleView implements View{
             for(int x=0; x<field.getSize().xValue; ++x){
 
                 int txt_nr;
-                int bombs = field.getBombsNumber(new Coordinates(x,y,level));
-//                try {         //equivalent to the line above
-//                    bombs = field.clickThis(new Coordinates(x, y, level));
-//                } catch (MineException e) {bombs = -1;}
-//                catch (OutOfBoundsException e) {/*do nothing*/}
+                int bombs = 0;
+                try {         //equivalent to the line above
+                    bombs = field.clickThis(new Coordinates(x, y, level));
+                } catch (MineException e) {bombs = -1;}
+                catch (OutOfBoundsException e) {/*do nothing*/}
                 if(bombs==-1){txt_nr = 3;}
                 else{txt_nr=1;}
 
