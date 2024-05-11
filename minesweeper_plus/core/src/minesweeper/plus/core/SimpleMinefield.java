@@ -25,7 +25,7 @@ public class SimpleMinefield implements Minefield {
             }
         }
 
-        table[firstGuess.xValue][firstGuess.yValue][firstGuess.yValue] = true;          //set mine here, will be deleted later
+        table[firstGuess.xValue][firstGuess.yValue][firstGuess.zValue] = true;          //set mine here, will be deleted later
         int count = 0;
         Random random = new Random();
         int bound = width*height*depth - 1;
@@ -43,7 +43,7 @@ public class SimpleMinefield implements Minefield {
                 count++;
             }
         }           //placing the mines
-        table[firstGuess.xValue][firstGuess.yValue][firstGuess.yValue] = false;
+        table[firstGuess.xValue][firstGuess.yValue][firstGuess.zValue] = false;
     }
 
     @Override
@@ -60,21 +60,31 @@ public class SimpleMinefield implements Minefield {
         Map.Entry<Coordinates, Integer> e0 = new AbstractMap.SimpleEntry<>(guess, r0);
         result.add(e0);
         if(r0 == 0) { //proceed futher only if blankspace
-            Set<Coordinates> visited = new HashSet<>();
+            boolean[][][] visited = new boolean[getSize().xValue][getSize().yValue][getSize().zValue];
             Queue<Map.Entry<Coordinates, Integer>> bfs = new ArrayDeque<>(); //setup bfs
             bfs.add(e0);
             while(!bfs.isEmpty()) {
                 Map.Entry<Coordinates, Integer> front = bfs.remove();
-                visited.add(front.getKey()); //mark as visited
                 result.add(front); //add to connected component
-                if (front.getValue() == 0) //only go further if blank space
+                visited[front.getKey().xValue][front.getKey().yValue][front.getKey().zValue] = true;
+                if (front.getValue() == 0) { //only go further if blank space
                     for (Coordinates c : proxy.neighbourhood(front.getKey())) {
-                        if (!visited.contains(c))
-                            try {
-                                int v = clickThis(c); //get value - guarenteed not to be a bomb because front.getValue() == 0
-                                bfs.add(new AbstractMap.SimpleEntry<>(c, v));
-                            } catch (MineException ignored) { } //exception will never occur, language barrier
+                        {
+                            if(!c.bounded(getSize())) {
+                                continue;
+                            }
+                            if (!visited[c.xValue][c.yValue][c.zValue]) {
+                                visited[c.xValue][c.yValue][c.zValue] = true;
+                                try {
+                                    int v = clickThis(c); //get value - guarenteed not to be a bomb because front.getValue() == 0
+                                    AbstractMap.SimpleEntry obj = new AbstractMap.SimpleEntry<>(c, v);
+                                    if (!bfs.contains(obj)) bfs.add(obj);
+                                } catch (MineException | OutOfBoundsException ignored) { } //exception will never occur, language barrier
+
+                            }
+                        }
                     }
+                }
             }
         }
         return  result;
@@ -124,7 +134,13 @@ public class SimpleMinefield implements Minefield {
         }
 
         int sum=0;
-        for(int ix=co.xValue; ix<co.xValue+3; ++ix){
+        try {
+            return clickThis(co);
+        }
+        catch (Exception ex) {
+            return -1;
+        }
+        /*for(int ix=co.xValue; ix<co.xValue+3; ++ix){
             if(ix<0 || ix>=width){continue;}
             for(int iy=co.yValue; iy<co.yValue+3; ++iy){
                 if(iy<0 || iy>=width){continue;}
@@ -133,7 +149,6 @@ public class SimpleMinefield implements Minefield {
                     if(table[ix][iy][iz]){++sum;}
                 }
             }
-        }
-        return sum;
+        }*/
     }
 }

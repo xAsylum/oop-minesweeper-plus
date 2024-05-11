@@ -2,12 +2,15 @@ package minesweeper.plus.services;
 
 import minesweeper.plus.core.*;
 
+import java.util.Map;
+import java.util.Set;
+
 public class SimpleBoard implements Board {
     private final Coordinates size;
     private final Spot[][][] fields;
     private final int noMines;
     private int noClicks = 0;
-    private Minefield minefield;
+    public Minefield minefield = null;
     public SimpleBoard(Coordinates size, int noMines) {
         this.size = size;
         this.noMines = noMines;
@@ -25,6 +28,9 @@ public class SimpleBoard implements Board {
         }
         noClicks++;
         return minefield.clickThis(guess);
+    }
+    public Set<Map.Entry<Coordinates, Integer>> instantiateClick(Coordinates guess) throws OutOfBoundsException, MineException {
+        return minefield.instantiateClick(guess);
     }
 
     @Override
