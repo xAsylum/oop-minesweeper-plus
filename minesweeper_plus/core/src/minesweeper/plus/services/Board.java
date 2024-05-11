@@ -9,6 +9,9 @@ public interface Board {
     //clicking on some spot, should only be accessed via Spot.leftClick()
     Integer clickThis(Coordinates guess) throws MineException, OutOfBoundsException;
 
+    //returns size of the board
+    Coordinates getSize();
+
     //returns spot that's on the given position
     Spot getSpot(Coordinates position) throws OutOfBoundsException;
 
