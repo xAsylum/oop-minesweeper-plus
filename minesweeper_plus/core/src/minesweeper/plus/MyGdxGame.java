@@ -48,6 +48,6 @@ public class MyGdxGame extends ApplicationAdapter {		//to be deleted, only as te
 	
 	@Override
 	public void dispose () {
-
+		;
 	}
 }
