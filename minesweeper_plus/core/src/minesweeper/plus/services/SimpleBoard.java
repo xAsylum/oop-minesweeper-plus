@@ -28,6 +28,11 @@ public class SimpleBoard implements Board {
     }
 
     @Override
+    public Coordinates getSize() {
+        return size;
+    }
+
+    @Override
     public Spot getSpot(Coordinates position) throws OutOfBoundsException {
         if(!position.bounded(size))
             throw new OutOfBoundsException();
