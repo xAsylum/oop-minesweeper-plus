@@ -11,9 +11,9 @@ import minesweeper.plus.services.SimpleBoard;
 public class Program {
     public static void main(String[] args) {        //HERE BE DRAGONS
         //plan on what to do here:
-        Coordinates size = new Coordinates(10, 10, 1);
-        int noMines = 5;
-        Board board = new SimpleBoard(size, noMines);
+//        Coordinates size = new Coordinates(10, 10, 1);
+//        int noMines = 5;
+//        Board board = new SimpleBoard(size, noMines);
         //names can (should) be changed, but constructors should (please) look like this
 //        Viewmodel viewmodel = new Viewmodel(board);
 //        View view = new View(viewmodel);

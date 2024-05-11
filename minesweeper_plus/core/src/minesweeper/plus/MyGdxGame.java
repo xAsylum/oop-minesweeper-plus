@@ -25,23 +25,28 @@ public class MyGdxGame extends ApplicationAdapter {		//to be deleted, only as te
 
 	View view;
 	SimpleMinefield field;
+	int level=0;
 	
 	@Override
 	public void create () {
 		try {
 			view = new SimpleView();
-			field = new SimpleMinefield(new Coordinates(20, 20, 20), 20, new Coordinates(1, 1, 1));
+			field = new SimpleMinefield(new Coordinates(20, 20, 10), 200, new Coordinates(1, 1, 0));
 		}
-		catch (Exception e){exit(1);}
+		catch (Exception e){
+			System.out.println("MyGdx");
+			exit(1);
+		}
 	}
-
-	Random random = new Random();
 
 
 	@Override
 	public void render () {
+
 		try {
-			view.draw(field, 0);
+			if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){++level; if(level >= field.getSize().zValue){level=field.getSize().zValue-1;}}
+			if(Gdx.input.isKeyJustPressed(Input.Keys.UP)){--level; if(level<0){level=0;}}
+			view.draw(field, level);
 		}
 		catch (Exception e){}
 	}

@@ -116,4 +116,24 @@ public class SimpleMinefield implements Minefield {
         }
         return result;
     }
+
+    //gets number of surrounding bombs
+    public int getBombsNumber(Coordinates co){  // -1 equals bomb
+        if(table[co.xValue][co.yValue][co.zValue]){
+            return -1;
+        }
+
+        int sum=0;
+        for(int ix=co.xValue; ix<co.xValue+3; ++ix){
+            if(ix<0 || ix>=width){continue;}
+            for(int iy=co.yValue; iy<co.yValue+3; ++iy){
+                if(iy<0 || iy>=width){continue;}
+                for(int iz=co.zValue; iz<co.zValue+3; ++iz){
+                    if(iz<0 || iz>=width){continue;}
+                    if(table[ix][iy][iz]){++sum;}
+                }
+            }
+        }
+        return sum;
+    }
 }
