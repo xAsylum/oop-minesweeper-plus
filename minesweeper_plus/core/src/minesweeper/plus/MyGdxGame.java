@@ -8,22 +8,31 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
+import minesweeper.plus.core.Coordinates;
+import minesweeper.plus.core.SimpleMinefield;
+import minesweeper.plus.services.SimpleBoard;
+import minesweeper.plus.views.SimpleView;
+import minesweeper.plus.views.View;
 
 import java.awt.*;
 import java.util.Random;
 
 import static java.lang.Math.abs;
+import static java.lang.System.exit;
 
 public class MyGdxGame extends ApplicationAdapter {		//to be deleted, only as template
-	SpriteBatch batch;
-	Texture img;
-	int x, y;
+
+
+	View view;
+	SimpleMinefield field;
 	
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("micek.jpeg");
-		x=0; y=0;
+		try {
+			view = new SimpleView();
+			field = new SimpleMinefield(new Coordinates(20, 20, 20), 20, new Coordinates(1, 1, 1));
+		}
+		catch (Exception e){exit(1);}
 	}
 
 	Random random = new Random();
@@ -31,24 +40,14 @@ public class MyGdxGame extends ApplicationAdapter {		//to be deleted, only as te
 
 	@Override
 	public void render () {
-		ScreenUtils.clear(1,1,1,1);
-		batch.begin();
-
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-			x+=50;
+		try {
+			view.draw(field, 0);
 		}
-		if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-			x-=50;
-		}
-        int cos;
-
-		batch.draw(img, (int)x,(int)y);
-		batch.end();
+		catch (Exception e){}
 	}
 	
 	@Override
 	public void dispose () {
-		batch.dispose();
-		img.dispose();
+
 	}
 }

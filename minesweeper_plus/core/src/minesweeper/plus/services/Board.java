@@ -14,4 +14,6 @@ public interface Board {
 
     //returns true if all mine-free spots have already been clicked
     boolean isFinished();
+
+
 }

@@ -37,4 +37,7 @@ public class SimpleBoard implements Board {
     public boolean isFinished() {
         return noClicks + noMines >= size.xValue * size.yValue * size.zValue;
     }
+
+
+
 }
