@@ -3,8 +3,8 @@ package minesweeper.plus.core;
 import java.util.ArrayList;
 
 public class Coordinates {
-    int xValue, yValue, zValue;
-    Coordinates(int x, int y, int z) {
+    public final int xValue, yValue, zValue;
+    public Coordinates(int x, int y, int z) {
         xValue = x;
         yValue = y;
         zValue = z;

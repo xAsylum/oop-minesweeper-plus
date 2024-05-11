@@ -7,10 +7,10 @@ public class SimpleMinefield implements Minefield {
     private final Proximity proxy;
     private final boolean[][][] table;
 
-    public SimpleMinefield(int width, int height, int depth, int noMines, Coordinates firstGuess) throws OutOfBoundsException {
-        this.width = width;
-        this.height = height;
-        this.depth = depth;
+    public SimpleMinefield(Coordinates size, int noMines, Coordinates firstGuess) throws OutOfBoundsException {
+        this.width = size.xValue;
+        this.height = size.yValue;
+        this.depth = size.zValue;
         this.noMines = noMines;
         if(!firstGuess.bounded(getSize()))
             throw new OutOfBoundsException();
