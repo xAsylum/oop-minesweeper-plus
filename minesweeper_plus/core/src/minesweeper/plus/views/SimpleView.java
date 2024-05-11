@@ -7,7 +7,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.ScreenUtils;
 import minesweeper.plus.core.Coordinates;
+import minesweeper.plus.core.MineException;
 import minesweeper.plus.core.Minefield;
+import minesweeper.plus.core.OutOfBoundsException;
 import minesweeper.plus.services.Board;
 
 import java.util.ArrayList;
@@ -47,6 +49,10 @@ public class SimpleView implements View{
 
                 int txt_nr;
                 int bombs = field.getBombsNumber(new Coordinates(x,y,level));
+//                try {         //equivalent to the line above
+//                    bombs = field.clickThis(new Coordinates(x, y, level));
+//                } catch (MineException e) {bombs = -1;}
+//                catch (OutOfBoundsException e) {/*do nothing*/}
                 if(bombs==-1){txt_nr = 3;}
                 else{txt_nr=1;}
 
