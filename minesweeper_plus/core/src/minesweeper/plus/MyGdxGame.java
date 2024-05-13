@@ -10,13 +10,9 @@ import minesweeper.plus.viewmodels.SimpleViewModel;
 import minesweeper.plus.views.SimpleView;
 import minesweeper.plus.views.View;
 
-import java.awt.*;
-import java.util.Random;
-
-import static java.lang.Math.abs;
 import static java.lang.System.exit;
 
-public class MyGdxGame extends ApplicationAdapter {		//to be deleted, only as template
+public class MyGdxGame extends ApplicationAdapter {
 
 
 	View view;
@@ -29,12 +25,12 @@ public class MyGdxGame extends ApplicationAdapter {		//to be deleted, only as te
 
 			Coordinates boardSize = new Coordinates(10, 10, 2);			//change board size here!
 
-			int numberOfMines = 10;			//change number of mines here!
+			int numberOfMines = 20;			//change number of mines here!
 
 			board = new SimpleBoard(boardSize, numberOfMines);
 			view = new SimpleView(new SimpleViewModel(board));
 		}
-		catch (Exception e){
+		catch (OutOfBoundsException e){
 			System.out.println("Wrong starting conditions");
 			exit(1);
 		}
