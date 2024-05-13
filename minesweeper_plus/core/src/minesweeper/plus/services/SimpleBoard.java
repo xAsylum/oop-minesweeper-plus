@@ -11,7 +11,9 @@ public class SimpleBoard implements Board {
     private final int noMines;
     private int noClicks = 0;
     public Minefield minefield = null;
-    public SimpleBoard(Coordinates size, int noMines) {
+    public SimpleBoard(Coordinates size, int noMines) throws OutOfBoundsException {
+        if(size == null || !new Coordinates(0, 0, 0).bounded(size) || noMines < 0)
+            throw new OutOfBoundsException();
         this.size = size;
         this.noMines = noMines;
         fields = new Spot[size.xValue][size.yValue][size.zValue];

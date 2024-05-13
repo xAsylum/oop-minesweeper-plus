@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import minesweeper.plus.core.Coordinates;
+import minesweeper.plus.core.OutOfBoundsException;
 import minesweeper.plus.services.SimpleBoard;
 import minesweeper.plus.viewmodels.SimpleViewModel;
 import minesweeper.plus.views.SimpleView;
@@ -25,11 +26,16 @@ public class MyGdxGame extends ApplicationAdapter {		//to be deleted, only as te
 	@Override
 	public void create () {
 		try {
-			board = new SimpleBoard(new Coordinates(10, 10, 2), 20);
+
+			Coordinates boardSize = new Coordinates(10, 10, 2);			//change board size here!
+
+			int numberOfMines = 10;			//change number of mines here!
+
+			board = new SimpleBoard(boardSize, numberOfMines);
 			view = new SimpleView(new SimpleViewModel(board));
 		}
 		catch (Exception e){
-			System.out.println("MyGdx");
+			System.out.println("Wrong starting conditions");
 			exit(1);
 		}
 	}
