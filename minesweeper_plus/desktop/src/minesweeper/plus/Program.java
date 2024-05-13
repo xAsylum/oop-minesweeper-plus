@@ -2,15 +2,9 @@ package minesweeper.plus;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import minesweeper.plus.MyGdxGame;
-
-import minesweeper.plus.core.Coordinates;
-import minesweeper.plus.services.Board;
-import minesweeper.plus.services.SimpleBoard;
 
 public class Program {
     public static void main(String[] args) {        //HERE BE DRAGONS
-
 
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setForegroundFPS(15);
