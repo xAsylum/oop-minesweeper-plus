@@ -34,7 +34,16 @@ public class SimpleView implements View{
         textures.add(new Texture("01_null.png"));
         textures.add(new Texture("01_title_1.png"));
         textures.add(new Texture("03_bomb.png"));
-        textures.add(new Texture("micek.jpeg"));
+        textures.add(new Texture("01_num_01.png"));
+        textures.add(new Texture("01_num_02.png"));
+        textures.add(new Texture("01_num_03.png"));
+        textures.add(new Texture("01_num_04.png"));
+        textures.add(new Texture("01_num_05.png"));
+        textures.add(new Texture("01_num_06.png"));
+        textures.add(new Texture("01_num_07.png"));
+        textures.add(new Texture("01_num_08.png"));
+        textures.add(new Texture("01_num_09.png"));
+        textures.add(new Texture("01_num_10.png"));
         model = viewModel;
         font.setColor(Color.GOLD);
         font.getData().setScale(2.5f);
@@ -58,10 +67,10 @@ public class SimpleView implements View{
                 if(bombs==-2) txt_nr = 0;
                 if(bombs == -1) txt_nr = 3;
                 else if(bombs == 0) txt_nr = 1;
+                else if(bombs > 0) txt_nr = 3 + bombs;
                 batch.draw(textures.get(txt_nr), x*sw, y*sh,
                 sw, sh, 0, 0,
                 textures.get(2).getWidth(), textures.get(2).getHeight(), false, false);
-                if(bombs > 0) font.draw(batch, bombs.toString(), x*sw + sw/3, y*sh + sh * 0.8f); //draw number representing bomb count
             }
         }
 
