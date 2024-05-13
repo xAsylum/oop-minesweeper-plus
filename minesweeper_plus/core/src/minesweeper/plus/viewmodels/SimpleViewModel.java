@@ -1,6 +1,7 @@
 package minesweeper.plus.viewmodels;
 
 import minesweeper.plus.core.Coordinates;
+import minesweeper.plus.core.MineException;
 import minesweeper.plus.core.OutOfBoundsException;
 import minesweeper.plus.services.Board;
 
@@ -23,7 +24,7 @@ Integer[][][] renderTable;
             bombCount = board.clickThis(c);
         } catch (OutOfBoundsException e) {
             return;
-        } catch (Exception ignored) {System.out.println(ignored); }
+        } catch (MineException e) {System.out.println("You lost! Hit a mine at " + c); }
         renderTable[c.xValue][c.yValue][c.zValue] = bombCount;
         if(bombCount == 0) {
             try {
