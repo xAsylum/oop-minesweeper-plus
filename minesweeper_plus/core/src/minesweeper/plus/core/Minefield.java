@@ -20,7 +20,4 @@ public interface Minefield {
     //quick-clear empty areas, returns an entrySet
     Set<Map.Entry<Coordinates, Integer>> getNeighbourhood (Coordinates guess) throws NotEmptyException, OutOfBoundsException;
 
-    // returns number of surrounding bombs; -1 if bomb field
-    int getBombsNumber(Coordinates co);
-
 }

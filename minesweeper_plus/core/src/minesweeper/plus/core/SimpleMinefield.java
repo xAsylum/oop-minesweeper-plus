@@ -17,33 +17,59 @@ public class SimpleMinefield implements Minefield {
         table = new boolean[width][height][depth];
         proxy = new N10Proximity();         //hard-coded for now
 
-        for(int i=0; i<width; i++) {
-            for(int j=0; j<height; j++) {
-                for(int k=0; k<depth; k++) {
-                    table[i][j][k] = false;
+
+        int bound = width*height*depth-1;
+        if(noMines > bound || noMines < 0)
+            throw new OutOfBoundsException();
+        if(noMines < bound/2)  {            //less than half are mines
+            for(int i=0; i<width; i++) {
+                for(int j=0; j<height; j++) {
+                    for(int k=0; k<depth; k++) {
+                        table[i][j][k] = false;
+                    }
+                }
+            }
+            table[firstGuess.xValue][firstGuess.yValue][firstGuess.zValue] = true;
+            int count = 0;
+            Random random = new Random();
+            while(count < noMines) {
+                int number = random.nextInt(bound);
+                int w = number%width;
+                number = number/width;
+                int h = number%height;
+                number = number/height;
+                int d = number;
+                if(!table[w][h][d]) {
+                    table[w][h][d] = true;
+                    count++;
+                }
+            }
+            table[firstGuess.xValue][firstGuess.yValue][firstGuess.zValue] = false;
+        }
+        else {          //more than half are mines
+            for(int i=0; i<width; i++) {
+                for(int j=0; j<height; j++) {
+                    for(int k=0; k<depth; k++) {
+                        table[i][j][k] = true;
+                    }
+                }
+            }
+            table[firstGuess.xValue][firstGuess.yValue][firstGuess.zValue] = false;
+            int count = bound - noMines;
+            Random random = new Random();
+            while(count > 0) {
+                int number = random.nextInt(bound);
+                int w = number%width;
+                number = number/width;
+                int h = number%height;
+                number = number/height;
+                int d = number;
+                if(table[w][h][d]) {
+                    table[w][h][d] = false;
+                    count--;
                 }
             }
         }
-
-        table[firstGuess.xValue][firstGuess.yValue][firstGuess.zValue] = true;          //set mine here, will be deleted later
-        int count = 0;
-        Random random = new Random();
-        int bound = width*height*depth - 1;
-        if(noMines > bound)
-            throw new OutOfBoundsException();           //too many mines
-        while (count < noMines) {
-            int number = random.nextInt(bound);
-            int w = number%width;
-            number = (number-w)/width;
-            int h = number%height;
-            number = (number-h)/height;
-            int d = number;
-            if(!table[w][h][d]){
-                table[w][h][d] = true;          //no mine -> add mine
-                count++;
-            }
-        }           //placing the mines
-        table[firstGuess.xValue][firstGuess.yValue][firstGuess.zValue] = false;
     }
 
     @Override
@@ -127,28 +153,4 @@ public class SimpleMinefield implements Minefield {
         return result;
     }
 
-    //gets number of surrounding bombs
-    public int getBombsNumber(Coordinates co){  // -1 equals bomb
-        if(table[co.xValue][co.yValue][co.zValue]){
-            return -1;
-        }
-
-        int sum=0;
-        try {
-            return clickThis(co);
-        }
-        catch (Exception ex) {
-            return -1;
-        }
-        /*for(int ix=co.xValue; ix<co.xValue+3; ++ix){
-            if(ix<0 || ix>=width){continue;}
-            for(int iy=co.yValue; iy<co.yValue+3; ++iy){
-                if(iy<0 || iy>=width){continue;}
-                for(int iz=co.zValue; iz<co.zValue+3; ++iz){
-                    if(iz<0 || iz>=width){continue;}
-                    if(table[ix][iy][iz]){++sum;}
-                }
-            }
-        }*/
-    }
 }
