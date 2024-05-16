@@ -20,9 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SimpleView implements View{
-
-
-
     List<Texture> textures = new ArrayList<>();
 
     Batch batch = new SpriteBatch(); // screen buffer
@@ -44,20 +41,30 @@ public class SimpleView implements View{
         textures.add(new Texture("01_num_08.png"));
         textures.add(new Texture("01_num_09.png"));
         textures.add(new Texture("01_num_10.png"));
+        textures.add(new Texture("04_emoji1.png"));
+        textures.add(new Texture("04_emoji2.png"));
+        textures.add(new Texture("04_emoji3.png"));
+        textures.add(new Texture("04_emoji4.png"));
         model = viewModel;
         font.setColor(Color.GOLD);
         font.getData().setScale(2.5f);
     }
     @Override
     public void draw(int level) throws Exception { // gets field and draws on screen
-        ScreenUtils.clear(1,1,1,1);
+        ScreenUtils.clear(0.35f,0.35f,0.35f,1);
         batch.begin();
+
+        float gp = 15.0f/100;
+        float pp = 10.0f/100;
+
 
         int width = (int)(Gdx.graphics.getWidth());
         int height = (int)(Gdx.graphics.getHeight());
-        float sw = ((float)width)/model.getFieldSize().xValue;
-        float sh = ((float)height)/model.getFieldSize().yValue;
+        float sw = ((float)width*(1.0f-pp))/model.getFieldSize().xValue;
+        float sh = ((float)height*(1.0f-gp))/model.getFieldSize().yValue;
 
+        float emoji_pos_x=(width-textures.get(14).getWidth())/2.0f;
+        float emoji_pos_y=height-textures.get(14).getHeight();
         boolean input = Gdx.input.isTouched();
         // iterate for every mine
         for(int y=0; y<model.getFieldSize().yValue; ++y){
@@ -70,9 +77,16 @@ public class SimpleView implements View{
                 else if(bombs > 0) txt_nr = 3 + bombs;
                 batch.draw(textures.get(txt_nr), x*sw, y*sh,
                 sw, sh, 0, 0,
-                textures.get(2).getWidth(), textures.get(2).getHeight(), false, false);
+                textures.get(txt_nr).getWidth(), textures.get(txt_nr).getHeight(), false, false);
             }
         }
+
+        int emoji_text=0;
+
+        if(input){emoji_text=3;}
+
+        batch.draw(textures.get(14+emoji_text), emoji_pos_x, emoji_pos_y);
+
 
         // reassigned for every window size changes
         batch.getProjectionMatrix().setToOrtho2D(0, 0, (int)(width), (int)(height));
