@@ -1,6 +1,7 @@
 package minesweeper.plus.views;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -21,6 +22,10 @@ import java.util.List;
 
 public class SimpleView implements View{
     List<Texture> textures = new ArrayList<>();
+
+    public int PROC_CNT=0;
+    int left_last=-2;
+    int right_last=-2;
 
     Batch batch = new SpriteBatch(); // screen buffer
     BitmapFont font = new BitmapFont(); // temporary, draw font
@@ -54,6 +59,7 @@ public class SimpleView implements View{
         ScreenUtils.clear(0.35f,0.35f,0.35f,1);
         batch.begin();
 
+        ++PROC_CNT;
         float gp = 15.0f/100;
         float pp = 10.0f/100;
 
@@ -96,6 +102,27 @@ public class SimpleView implements View{
             model.handleClick(new Coordinates(x, y, level));
         }
         batch.end();
+        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)){left_last=PROC_CNT;}
+        if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT)){right_last=PROC_CNT;}
+    }
+
+    boolean left_click_begin(){
+        return Gdx.input.isButtonPressed(Input.Buttons.LEFT) && PROC_CNT - left_last > 1;
+    }
+    boolean left_clicked(){
+        return Gdx.input.isButtonPressed(Input.Buttons.LEFT);
+    }
+    boolean left_click_released(){
+        return !Gdx.input.isButtonPressed(Input.Buttons.LEFT) && PROC_CNT - left_last == 1;
+    }
+    boolean right_click_begin(){
+        return Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && PROC_CNT - right_last > 1;
+    }
+    boolean right_clicked(){
+        return Gdx.input.isButtonPressed(Input.Buttons.RIGHT);
+    }
+    boolean right_click_released(){
+        return !Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && PROC_CNT - right_last == 1;
     }
 
 }
