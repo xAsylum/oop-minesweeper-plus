@@ -1,7 +1,6 @@
 package minesweeper.plus.services;
 
 import minesweeper.plus.core.Coordinates;
-import minesweeper.plus.core.MineException;
 
 import java.util.Map;
 
