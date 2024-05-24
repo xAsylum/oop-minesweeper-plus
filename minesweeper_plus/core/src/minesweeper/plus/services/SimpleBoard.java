@@ -41,9 +41,9 @@ public class SimpleBoard implements Board {
     }
 
     @Override
-    public Spot getSpot(Coordinates position) throws OutOfBoundsException {
+    public Spot getSpot(Coordinates position) {
         if(!position.bounded(size))
-            throw new OutOfBoundsException();
+            return null;
         return fields[position.xValue][position.yValue][position.zValue];
     }
 

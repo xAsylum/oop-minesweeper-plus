@@ -4,41 +4,57 @@ import minesweeper.plus.core.Coordinates;
 import minesweeper.plus.core.MineException;
 import minesweeper.plus.core.OutOfBoundsException;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SimpleSpot implements Spot {
     private final Coordinates position;
     private final Board board;
-    private boolean clicked = false;
-    private int value;
-    private boolean safe = false;
+    private SpotValues value = SpotValues.HIDDEN;
 
     SimpleSpot(Coordinates position, Board board) {
         this.position = position;
         this.board = board;
     }
-    public Integer leftClick() throws MineException {
-        if(isSafe())
-            return null;
-        if(isClicked())
-            return value;
+
+    @Override
+    public Map<Coordinates, SpotValues> leftClick() {
+        Map<Coordinates, SpotValues> result = new HashMap<>();
         try {
-            value = board.clickThis(position);
-        } catch (OutOfBoundsException e) {
-            throw new RuntimeException("Catastrophic failure in SimpleSpot.leftClick, OOB");
+            int a = board.clickThis(position);
+            NumberToSpotValue tr = new NumberToSpotValue();
+            result.put(position, tr.getSpotValue(a));
+        } catch (MineException e) {
+            result.put(position, SpotValues.MINE);
+        } catch (OutOfBoundsException ignored) {}
+        return null;
+    }
+
+    @Override
+    public boolean rightClick() {
+        if(value == SpotValues.FLAG) {
+            value = SpotValues.HIDDEN;
+            return true;
         }
-        clicked = true;
+        else if(value == SpotValues.HIDDEN) {
+            value = SpotValues.FLAG;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public SpotValues getValue() {
         return value;
     }
-    public boolean rightClick() {
-        if(isClicked())
-            return false;
-        safe = !safe;
-        return true;
-    }
+
+    @Override
     public boolean isClicked() {
-        return clicked;
+        return value != SpotValues.FLAG && value != SpotValues.HIDDEN;
     }
+    @Override
     public boolean isSafe() {
-        return safe;
+        return value == SpotValues.FLAG;
     }
 
 }

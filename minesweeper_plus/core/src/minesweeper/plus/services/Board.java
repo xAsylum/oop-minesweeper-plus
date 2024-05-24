@@ -17,7 +17,7 @@ public interface Board {
     Coordinates getSize();
 
     //returns spot that's on the given position
-    Spot getSpot(Coordinates position) throws OutOfBoundsException;
+    Spot getSpot(Coordinates position);
 
     //returns true if all mine-free spots have already been clicked
     boolean isFinished();
