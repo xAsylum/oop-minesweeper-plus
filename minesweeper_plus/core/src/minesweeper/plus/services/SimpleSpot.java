@@ -27,7 +27,7 @@ public class SimpleSpot implements Spot {
         } catch (MineException e) {
             result.put(position, SpotValues.MINE);
         } catch (OutOfBoundsException ignored) {}
-        return null;
+        return result;
     }
 
     @Override
