@@ -15,12 +15,14 @@ public interface Board {
 
     //returns size of the board
     Coordinates getSize();
+    int getNoMines();
+    int getNoFields();
 
     //returns spot that's on the given position
     Spot getSpot(Coordinates position);
 
     //returns true if all mine-free spots have already been clicked
-    boolean isFinished();
+    boolean initialized();
 
 
 }

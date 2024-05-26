@@ -25,7 +25,7 @@ public class MyGdxGame extends ApplicationAdapter {
 
 			Coordinates boardSize = new Coordinates(10, 10, 2);			//change board size here!
 
-			int numberOfMines = 20;			//change number of mines here!
+			int numberOfMines = 10;			//change number of mines here!
 
 			board = new SimpleBoard(boardSize, numberOfMines);
 			view = new SimpleView(new SimpleViewModel(board));

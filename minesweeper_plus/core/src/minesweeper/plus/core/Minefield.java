@@ -9,6 +9,8 @@ public interface Minefield {
 //    Minefield (Coordinates size, int noMines, Coordinates firstGuess) throws OutOfBoundsException;
     // constructor will look like this
     Coordinates getSize();
+    int getNoFields();
+    int getNoMines();
 
     //intantiateClick - method to get connected component of the board, bounded by nonzero fields
     Set<Map.Entry<Coordinates, Integer>> instantiateClick(Coordinates guess) throws OutOfBoundsException, MineException;

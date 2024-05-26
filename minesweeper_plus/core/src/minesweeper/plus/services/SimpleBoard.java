@@ -41,14 +41,28 @@ public class SimpleBoard implements Board {
     }
 
     @Override
+    public int getNoMines() {
+        if(minefield != null)
+            return minefield.getNoMines();
+        return 0;
+    }
+
+    @Override
+    public int getNoFields() {
+        if(minefield != null)
+            return minefield.getNoFields();
+        return 0;
+    }
+
+    @Override
     public Spot getSpot(Coordinates position) {
         if(!position.bounded(size))
             return null;
         return fields[position.xValue][position.yValue][position.zValue];
     }
 
-    public boolean isFinished() {
-        return noClicks + noMines >= size.xValue * size.yValue * size.zValue;
+    public boolean initialized() {
+        return minefield != null;
     }
 
 

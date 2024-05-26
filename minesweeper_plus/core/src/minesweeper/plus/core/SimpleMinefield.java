@@ -77,6 +77,16 @@ public class SimpleMinefield implements Minefield {
         return new Coordinates(width, height, depth);
     }
 
+    @Override
+    public int getNoFields() {
+        return width * height * depth;
+    }
+
+    @Override
+    public int getNoMines() {
+        return noMines;
+    }
+
 
     //intantiateClick - method to get connected component of the board, bounded by nonzero fields
     @Override
