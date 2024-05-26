@@ -7,6 +7,8 @@ import minesweeper.plus.core.OutOfBoundsException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static minesweeper.plus.services.NumberToSpotValue.getSpotValue;
+
 public class SimpleSpot implements Spot {
     private final Coordinates position;
     private final Board board;
@@ -22,8 +24,7 @@ public class SimpleSpot implements Spot {
         Map<Coordinates, SpotValues> result = new HashMap<>();
         try {
             int a = board.clickThis(position);
-            NumberToSpotValue tr = new NumberToSpotValue();
-            result.put(position, tr.getSpotValue(a));
+            result.put(position, getSpotValue(a));
         } catch (MineException e) {
             result.put(position, SpotValues.MINE);
         } catch (OutOfBoundsException ignored) {}

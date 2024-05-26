@@ -6,8 +6,8 @@ import java.util.Map;
 
 //quick translator used in communication
 public class NumberToSpotValue {
-    private final Map<Integer, SpotValues> map;
-    NumberToSpotValue() {
+    private static final Map<Integer, SpotValues> map;
+    static {
         map = new HashMap<>();
         map.put(0, SpotValues.N00);//
         map.put(1, SpotValues.N01);
@@ -37,7 +37,7 @@ public class NumberToSpotValue {
         map.put(25, SpotValues.N25);//
         map.put(26, SpotValues.N26);
     }
-    SpotValues getSpotValue(int n) {
+    public static SpotValues getSpotValue(int n) {
         return map.get(n);
     }
 }
