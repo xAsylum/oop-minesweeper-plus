@@ -22,11 +22,10 @@ public class SimpleSpot implements Spot {
     @Override
     public Map<Coordinates, SpotValues> leftClick() {
         Map<Coordinates, SpotValues> result = new HashMap<>();
+        if(isClicked() || isSafe())
+            return result;
         try {
-            int a = board.clickThis(position);
-            result.put(position, getSpotValue(a));
-        } catch (MineException e) {
-            result.put(position, SpotValues.MINE);
+            result = board.clickThis(this);
         } catch (OutOfBoundsException ignored) {}
         return result;
     }
@@ -47,6 +46,16 @@ public class SimpleSpot implements Spot {
     @Override
     public SpotValues getValue() {
         return value;
+    }
+
+    @Override
+    public void setValue(SpotValues s) {
+        value = s;
+    }
+
+    @Override
+    public Coordinates getPosition() {
+        return position;
     }
 
     @Override

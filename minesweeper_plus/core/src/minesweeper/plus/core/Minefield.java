@@ -1,5 +1,7 @@
 package minesweeper.plus.core;
 
+import minesweeper.plus.services.SpotValues;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -9,17 +11,12 @@ public interface Minefield {
 //    Minefield (Coordinates size, int noMines, Coordinates firstGuess) throws OutOfBoundsException;
     // constructor will look like this
     Coordinates getSize();
-    int getNoFields();
-    int getNoMines();
-
-    //intantiateClick - method to get connected component of the board, bounded by nonzero fields
-    Set<Map.Entry<Coordinates, Integer>> instantiateClick(Coordinates guess) throws OutOfBoundsException, MineException;
 
     //returns no. mines in proximity of this field
     //OR MineException if mine OR OutOfBounds if out of bounds
-    int clickThis(Coordinates guess) throws MineException, OutOfBoundsException;
+    SpotValues clickThis(Coordinates guess) throws OutOfBoundsException;
 
-    //quick-clear empty areas, returns an entrySet
-    Set<Map.Entry<Coordinates, Integer>> getNeighbourhood (Coordinates guess) throws NotEmptyException, OutOfBoundsException;
+    //returns coordinates of neighbouring fields, all of them are within bounds
+    Set<Coordinates> getNeighbourhood (Coordinates guess) throws OutOfBoundsException;
 
 }

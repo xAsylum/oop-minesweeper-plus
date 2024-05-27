@@ -2,15 +2,16 @@ package minesweeper.plus.services;
 
 import minesweeper.plus.core.*;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class SimpleBoard implements Board {
     private final Coordinates size;
     private final Spot[][][] fields;
     private final int noMines;
     private int noClicks = 0;
+    private boolean dead = false;
     public Minefield minefield = null;
+
     public SimpleBoard(Coordinates size, int noMines) throws OutOfBoundsException {
         if(size == null || !new Coordinates(0, 0, 0).bounded(size) || noMines < 0)
             throw new OutOfBoundsException();
@@ -24,15 +25,34 @@ public class SimpleBoard implements Board {
             }
         }
     }
-    public Integer clickThis(Coordinates guess) throws MineException, OutOfBoundsException {
-        if(minefield == null) {
-            minefield = new SimpleMinefield(size, noMines, guess);
+
+    @Override
+    public Map<Coordinates, SpotValues> clickThis(Spot guess) throws OutOfBoundsException {
+        if(!guess.getPosition().bounded(getSize()))
+            throw new OutOfBoundsException();
+        if(minefield == null)
+            minefield = new SimpleMinefield(getSize(), getNoMines(), guess.getPosition());
+
+        Map<Coordinates, SpotValues> result = new HashMap<>();
+        Queue<Spot> queue = new LinkedList<>();
+        queue.add(guess);
+        synchronized(this){
+            while(!queue.isEmpty()) {
+                Spot tempSpot = queue.remove();
+                if(!tempSpot.isClicked() && !tempSpot.isSafe()) {
+                    noClicks++;
+                    SpotValues value = minefield.clickThis(tempSpot.getPosition());
+                    if(value == SpotValues.MINE)
+                        dead = true;
+                    tempSpot.setValue(value);
+                    result.put(tempSpot.getPosition(), value);
+                    if(value == SpotValues.N00) {
+                        queue.addAll(getNeighbourhood(tempSpot.getPosition()));
+                    }
+                }
+            }
         }
-        noClicks++;
-        return minefield.clickThis(guess);
-    }
-    public Set<Map.Entry<Coordinates, Integer>> instantiateClick(Coordinates guess) throws OutOfBoundsException, MineException {
-        return minefield.instantiateClick(guess);
+        return result;
     }
 
     @Override
@@ -42,16 +62,25 @@ public class SimpleBoard implements Board {
 
     @Override
     public int getNoMines() {
-        if(minefield != null)
-            return minefield.getNoMines();
-        return 0;
+        return noMines;
     }
 
     @Override
     public int getNoFields() {
-        if(minefield != null)
-            return minefield.getNoFields();
-        return 0;
+        return size.zValue*size.yValue*size.zValue;
+    }
+
+    @Override
+    public Set<Spot> getNeighbourhood(Coordinates position) {
+        Set<Spot> result = new HashSet<>();
+        Set<Coordinates> temp;
+        try {
+            temp = minefield.getNeighbourhood(position);
+        } catch (OutOfBoundsException e) { return result; }
+        for(Coordinates c : temp) {
+            result.add(getSpot(c));
+        }
+        return result;
     }
 
     @Override
@@ -61,10 +90,20 @@ public class SimpleBoard implements Board {
         return fields[position.xValue][position.yValue][position.zValue];
     }
 
+    @Override
     public boolean initialized() {
         return minefield != null;
     }
 
+    @Override
+    public boolean won() {
+        return !dead() && noMines + noClicks == size.xValue*size.yValue*size.zValue;
+    }
+
+    @Override
+    public boolean dead() {
+        return dead;
+    }
 
 
 }

@@ -40,6 +40,7 @@ public class SimpleView implements View{
         textures.put("01_num_00.png", new Texture("01_null.png"));
         textures.put("01_title_1.png", new Texture("01_title_1.png"));
         textures.put("03_bomb.png", new Texture("03_bomb.png"));
+        textures.put("02_flag.png", new Texture("02_flag.png"));
         textures.put("01_num_01.png", new Texture("01_num_01.png"));
         textures.put("01_num_02.png", new Texture("01_num_02.png"));
         textures.put("01_num_03.png", new Texture("01_num_03.png"));
@@ -74,7 +75,8 @@ public class SimpleView implements View{
 
         float emoji_pos_x = (width - textures.get("04_emoji1.png").getWidth()) / 2.0f;
         float emoji_pos_y = height - textures.get("04_emoji1.png").getHeight();
-        boolean input = left_click_released();
+        boolean inputLMB = left_click_released();
+        boolean inputRMB = right_click_released();
         // iterate for every mine
         for (int y = 0; y < model.getFieldSize().yValue; ++y) {
             for (int x = 0; x < model.getFieldSize().xValue; ++x) {
@@ -104,11 +106,15 @@ public class SimpleView implements View{
         // reassigned for every window size changes
         batch.getProjectionMatrix().setToOrtho2D(0, 0, (int) (width), (int) (height));
 
-        if (!model.dead() && !model.won()) {
-            if (input) {
+        if (!model.dead() && !model.won()) {            //handling all clicks
+            if (inputLMB || inputRMB) {
                 int x = (int) (Gdx.input.getX() / sw);
                 int y = (int) ((height - Gdx.input.getY()) / sh);
-                model.handleClick(new Coordinates(x, y, level));
+                if(inputLMB)
+                    model.leftClick(new Coordinates(x, y, level));
+                else if(inputRMB)
+                    model.rightClick(new Coordinates(x, y, level));
+
             }
         }
         batch.end();

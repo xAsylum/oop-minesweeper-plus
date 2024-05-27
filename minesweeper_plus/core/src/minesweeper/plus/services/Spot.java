@@ -16,6 +16,12 @@ public interface Spot {
     //just returns the enum value of this spot
     SpotValues getValue();
 
+    //sets the value, used by SimpleBoard (and no one else)
+    void setValue(SpotValues s);
+
+    //returns position of this Spot
+    Coordinates getPosition();
+
     //returns true if the spot has already been clicked
     boolean isClicked();
 

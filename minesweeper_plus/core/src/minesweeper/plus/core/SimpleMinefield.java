@@ -1,5 +1,9 @@
 package minesweeper.plus.core;
 
+import minesweeper.plus.services.NumberToSpotValue;
+import minesweeper.plus.services.SpotValues;
+import static minesweeper.plus.services.NumberToSpotValue.getSpotValue;
+
 import java.util.*;
 
 public class SimpleMinefield implements Minefield {
@@ -78,87 +82,29 @@ public class SimpleMinefield implements Minefield {
     }
 
     @Override
-    public int getNoFields() {
-        return width * height * depth;
-    }
-
-    @Override
-    public int getNoMines() {
-        return noMines;
-    }
-
-
-    //intantiateClick - method to get connected component of the board, bounded by nonzero fields
-    @Override
-    public Set<Map.Entry<Coordinates, Integer>> instantiateClick(Coordinates guess) throws OutOfBoundsException, MineException {
-        Set<Map.Entry<Coordinates, Integer>> result = new HashSet<>();
-        int r0 = clickThis(guess);
-        Map.Entry<Coordinates, Integer> e0 = new AbstractMap.SimpleEntry<>(guess, r0);
-        result.add(e0);
-        if(r0 == 0) { //proceed futher only if blankspace
-            boolean[][][] visited = new boolean[getSize().xValue][getSize().yValue][getSize().zValue];
-            Queue<Map.Entry<Coordinates, Integer>> bfs = new ArrayDeque<>(); //setup bfs
-            bfs.add(e0);
-            while(!bfs.isEmpty()) {
-                Map.Entry<Coordinates, Integer> front = bfs.remove();
-                result.add(front); //add to connected component
-                visited[front.getKey().xValue][front.getKey().yValue][front.getKey().zValue] = true;
-                if (front.getValue() == 0) { //only go further if blank space
-                    for (Coordinates c : proxy.neighbourhood(front.getKey())) {
-                        {
-                            if(!c.bounded(getSize())) {
-                                continue;
-                            }
-                            if (!visited[c.xValue][c.yValue][c.zValue]) {
-                                visited[c.xValue][c.yValue][c.zValue] = true;
-                                try {
-                                    int v = clickThis(c); //get value - guarenteed not to be a bomb because front.getValue() == 0
-                                    AbstractMap.SimpleEntry obj = new AbstractMap.SimpleEntry<>(c, v);
-                                    if (!bfs.contains(obj)) bfs.add(obj);
-                                } catch (MineException | OutOfBoundsException ignored) { } //exception will never occur, language barrier
-
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return  result;
-    }
-
-    @Override
-    public int clickThis(Coordinates guess) throws MineException, OutOfBoundsException {
+    public SpotValues clickThis(Coordinates guess) throws OutOfBoundsException {
         if(!guess.bounded(getSize()))
             throw new OutOfBoundsException();
         if(table[guess.xValue][guess.yValue][guess.zValue])
-            throw new MineException();
+            return SpotValues.MINE;
         int result = 0;
-        Set<Coordinates> neighbourhood = proxy.neighbourhood(guess);
+        Set<Coordinates> neighbourhood = getNeighbourhood(guess);
         for(Coordinates c : neighbourhood) {
-            if(c.bounded(getSize())) {          //if within table
-                if(table[c.xValue][c.yValue][c.zValue])         //if mine there
-                    result++;
-            }
+            if(table[c.xValue][c.yValue][c.zValue])         //if mine there
+                result++;
         }
-        return result;
+        return NumberToSpotValue.getSpotValue(result);
     }
 
     @Override
-    public Set<Map.Entry<Coordinates, Integer>> getNeighbourhood(Coordinates guess) throws NotEmptyException, OutOfBoundsException {
-        try {
-            if (clickThis(guess) != 0)
-                throw new NotEmptyException();
-        } catch (MineException e) {
-            throw new NotEmptyException();          //if mine then it's also not empty
-        }
-        Set<Coordinates> neighbourhood = proxy.neighbourhood(guess);
-        Set<Map.Entry<Coordinates, Integer>> result = new HashSet<>();
-        for(Coordinates c : neighbourhood) {
-            try {
-                int value = clickThis(c);
-                result.add(new AbstractMap.SimpleEntry<>(c, value));
-            } catch (MineException e) {/* it's just impossible here, has been checked earlier */}
-            catch (OutOfBoundsException e) {/* then we just don't add an entry for these Coordinates */}
+    public Set<Coordinates> getNeighbourhood(Coordinates guess) throws OutOfBoundsException {
+        if(!guess.bounded(getSize()))
+            throw new OutOfBoundsException();
+        Set<Coordinates> around = proxy.neighbourhood(guess);
+        Set<Coordinates> result = new HashSet<>();          //will not contain
+        for(Coordinates c : around) {
+            if(c.bounded(getSize()))
+                result.add(c);
         }
         return result;
     }

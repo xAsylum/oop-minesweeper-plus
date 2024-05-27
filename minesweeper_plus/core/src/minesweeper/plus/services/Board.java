@@ -9,14 +9,18 @@ import java.util.Set;
 
 public interface Board {
 
-    //clicking on some spot, should only be accessed via Spot.leftClick()
-    Integer clickThis(Coordinates guess) throws MineException, OutOfBoundsException;
-    Set<Map.Entry<Coordinates, Integer>> instantiateClick(Coordinates guess) throws OutOfBoundsException, MineException;
+    //includes quick-clearing large areas
+    Map<Coordinates, SpotValues> clickThis(Spot guess) throws OutOfBoundsException;
 
     //returns size of the board
     Coordinates getSize();
+
     int getNoMines();
+
     int getNoFields();
+
+    //returns set of neighbouring spots, all within bounds
+    Set<Spot> getNeighbourhood(Coordinates position);
 
     //returns spot that's on the given position
     Spot getSpot(Coordinates position);
@@ -24,5 +28,9 @@ public interface Board {
     //returns true if all mine-free spots have already been clicked
     boolean initialized();
 
+    //returns true if the game is finished, false otherwise
+    boolean won();
 
+    //returns true if any bomb has already been clicked
+    boolean dead();
 }

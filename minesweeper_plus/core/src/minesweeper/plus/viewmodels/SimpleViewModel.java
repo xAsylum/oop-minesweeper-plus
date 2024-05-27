@@ -5,14 +5,13 @@ import minesweeper.plus.core.MineException;
 import minesweeper.plus.core.OutOfBoundsException;
 import minesweeper.plus.services.Board;
 import minesweeper.plus.services.NumberToSpotValue;
+import minesweeper.plus.services.Spot;
 import minesweeper.plus.services.SpotValues;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.SocketOption;
+import java.util.*;
 
 public class SimpleViewModel implements ViewModel{
-    boolean dead = false;
-    int clicks = 0;
     List<SpotValues> defaultValues;
     Board board; //field referenced by viewmodel
     public SimpleViewModel(Board b) {
@@ -31,43 +30,41 @@ public class SimpleViewModel implements ViewModel{
     }
 SpotValues[][][] renderTable;
     private void updateRenderTable(Coordinates c, SpotValues v) {
-        if(defaultValues.contains(renderTable[c.xValue][c.yValue][c.zValue])) {
-            clicks++;
-        }
+//        if(defaultValues.contains(renderTable[c.xValue][c.yValue][c.zValue])) {
+//            clicks++;
+//        }
         //System.out.println(clicks + " " + board.getNoFields() + " " + board.getNoMines() + " " + won());
         renderTable[c.xValue][c.yValue][c.zValue] = v;
     }
-    public void handleClick(Coordinates c) { //method invoked when a person clicks certain field
-        int bombCount = -1;
-        try {
-            bombCount = board.clickThis(c);
-        } catch (OutOfBoundsException e) {
-            return;
-        } catch (MineException e) {
-            dead = true;
-            System.out.println("You lost! Hit a mine at " + c);
+
+    @Override
+    public void leftClick(Coordinates c) {
+        Map<Coordinates, SpotValues> uncovered = board.getSpot(c).leftClick();
+
+        for(Map.Entry<Coordinates, SpotValues> e : uncovered.entrySet()) {
+            if(e.getValue() == SpotValues.MINE) {
+                System.out.println("You lost! Hit a mine at " + e.getKey());
+            }
+            updateRenderTable(e.getKey(), e.getValue());
         }
-        if(bombCount >= 0)
-            updateRenderTable(c, NumberToSpotValue.getSpotValue(bombCount));
-        else updateRenderTable(c, SpotValues.MINE);
-        if(bombCount == 0) {
-            try {
-                for (java.util.Map.Entry<Coordinates, Integer> x : board.instantiateClick(c)) {
-                       updateRenderTable(x.getKey(), NumberToSpotValue.getSpotValue(x.getValue()));
-                }
-            }catch (Exception ignored) { }
-        }
+    }
+    @Override
+    public void rightClick(Coordinates c) {
+        board.getSpot(c).rightClick();
+        updateRenderTable(c, board.getSpot(c).getValue());
     }
 
     @Override
     public boolean dead() {
-        return dead;
+        return board.dead();
     }
 
     @Override
     public boolean won() {
-        return board.initialized() && (board.getNoFields() == board.getNoMines() + clicks);
+        return board.won();
     }
+
+    @Override
 
     public SpotValues renderAtCoords(Coordinates c) {
         return renderTable[c.xValue][c.yValue][c.zValue];
