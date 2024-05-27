@@ -36,19 +36,17 @@ public class SimpleBoard implements Board {
         Map<Coordinates, SpotValues> result = new HashMap<>();
         Queue<Spot> queue = new LinkedList<>();
         queue.add(guess);
-        synchronized(this){
-            while(!queue.isEmpty()) {
-                Spot tempSpot = queue.remove();
-                if(!tempSpot.isClicked() && !tempSpot.isSafe()) {
-                    noClicks++;
-                    SpotValues value = minefield.clickThis(tempSpot.getPosition());
-                    if(value == SpotValues.MINE)
-                        dead = true;
-                    tempSpot.setValue(value);
-                    result.put(tempSpot.getPosition(), value);
-                    if(value == SpotValues.N00) {
-                        queue.addAll(getNeighbourhood(tempSpot.getPosition()));
-                    }
+        while(!queue.isEmpty()) {
+            Spot tempSpot = queue.remove();
+            if(!tempSpot.isClicked() && !tempSpot.isSafe()) {
+                noClicks++;
+                SpotValues value = minefield.clickThis(tempSpot.getPosition());
+                if(value == SpotValues.MINE)
+                    dead = true;
+                tempSpot.setValue(value);
+                result.put(tempSpot.getPosition(), value);
+                if(value == SpotValues.N00) {
+                    queue.addAll(getNeighbourhood(tempSpot.getPosition()));
                 }
             }
         }
