@@ -30,17 +30,20 @@ SpotValues[][][] renderTable;
 
     @Override
     public void leftClick(Coordinates c) {
-        Map<Coordinates, SpotValues> uncovered = board.getSpot(c).leftClick();
+        if(!c.bounded(getFieldSize()))
+            return;
 
+        Map<Coordinates, SpotValues> uncovered = board.getSpot(c).leftClick();
         for(Map.Entry<Coordinates, SpotValues> e : uncovered.entrySet()) {
-            if(e.getValue() == SpotValues.MINE) {
+            if(e.getValue() == SpotValues.MINE)
                 System.out.println("You lost! Hit a mine at " + e.getKey());
-            }
             updateRenderTable(e.getKey(), e.getValue());
         }
     }
     @Override
     public void rightClick(Coordinates c) {
+        if(!c.bounded(getFieldSize()))
+            return;
         board.getSpot(c).rightClick();
         updateRenderTable(c, board.getSpot(c).getValue());
     }
