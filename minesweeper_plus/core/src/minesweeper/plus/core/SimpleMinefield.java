@@ -2,7 +2,6 @@ package minesweeper.plus.core;
 
 import minesweeper.plus.services.NumberToSpotValue;
 import minesweeper.plus.services.SpotValues;
-import static minesweeper.plus.services.NumberToSpotValue.getSpotValue;
 
 import java.util.*;
 

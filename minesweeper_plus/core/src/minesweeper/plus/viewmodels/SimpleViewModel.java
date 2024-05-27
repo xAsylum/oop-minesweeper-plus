@@ -1,14 +1,9 @@
 package minesweeper.plus.viewmodels;
 
 import minesweeper.plus.core.Coordinates;
-import minesweeper.plus.core.MineException;
-import minesweeper.plus.core.OutOfBoundsException;
 import minesweeper.plus.services.Board;
-import minesweeper.plus.services.NumberToSpotValue;
-import minesweeper.plus.services.Spot;
 import minesweeper.plus.services.SpotValues;
 
-import java.net.SocketOption;
 import java.util.*;
 
 public class SimpleViewModel implements ViewModel{
@@ -30,10 +25,6 @@ public class SimpleViewModel implements ViewModel{
     }
 SpotValues[][][] renderTable;
     private void updateRenderTable(Coordinates c, SpotValues v) {
-//        if(defaultValues.contains(renderTable[c.xValue][c.yValue][c.zValue])) {
-//            clicks++;
-//        }
-        //System.out.println(clicks + " " + board.getNoFields() + " " + board.getNoMines() + " " + won());
         renderTable[c.xValue][c.yValue][c.zValue] = v;
     }
 

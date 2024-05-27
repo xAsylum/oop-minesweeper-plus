@@ -7,20 +7,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.ScreenUtils;
 import minesweeper.plus.core.Coordinates;
-import minesweeper.plus.core.MineException;
-import minesweeper.plus.core.Minefield;
-import minesweeper.plus.core.OutOfBoundsException;
-import minesweeper.plus.services.Board;
 import minesweeper.plus.services.SpotValues;
 import minesweeper.plus.viewmodels.ViewModel;
 
-import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class SimpleView implements View{
