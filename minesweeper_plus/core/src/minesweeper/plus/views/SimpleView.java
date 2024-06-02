@@ -18,9 +18,9 @@ import java.util.Map;
 public class SimpleView implements View{
     Map<String, Texture> textures = new HashMap<>();
 
-    public int PROC_CNT=0;
-    int left_last=-2;
-    int right_last=-2;
+    public int procCnt =0;
+    int leftLast =-2;
+    int rightLast =-2;
     SimpleSpotTextures getTexture;
     Batch batch = new SpriteBatch(); // screen buffer
     BitmapFont font = new BitmapFont(); // temporary, draw font
@@ -56,7 +56,7 @@ public class SimpleView implements View{
         ScreenUtils.clear(0.35f, 0.35f, 0.35f, 1);
         batch.begin();
 
-        ++PROC_CNT;
+        ++procCnt;
         float gp = 15.0f / 100;
         float pp = 10.0f / 100;
 
@@ -111,30 +111,30 @@ public class SimpleView implements View{
         }
         batch.end();
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            left_last = PROC_CNT;
+            leftLast = procCnt;
         }
         if (Gdx.input.isButtonPressed(Input.Buttons.RIGHT)) {
-            right_last = PROC_CNT;
+            rightLast = procCnt;
         }
     }
 
     boolean left_click_begin(){
-        return Gdx.input.isButtonPressed(Input.Buttons.LEFT) && PROC_CNT - left_last > 1;
+        return Gdx.input.isButtonPressed(Input.Buttons.LEFT) && procCnt - leftLast > 1;
     }
     boolean left_clicked(){
         return Gdx.input.isButtonPressed(Input.Buttons.LEFT);
     }
     boolean left_click_released(){
-        return !Gdx.input.isButtonPressed(Input.Buttons.LEFT) && PROC_CNT - left_last == 1;
+        return !Gdx.input.isButtonPressed(Input.Buttons.LEFT) && procCnt - leftLast == 1;
     }
     boolean right_click_begin(){
-        return Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && PROC_CNT - right_last > 1;
+        return Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && procCnt - rightLast > 1;
     }
     boolean right_clicked(){
         return Gdx.input.isButtonPressed(Input.Buttons.RIGHT);
     }
     boolean right_click_released(){
-        return !Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && PROC_CNT - right_last == 1;
+        return !Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && procCnt - rightLast == 1;
     }
 
 }
