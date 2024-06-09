@@ -29,12 +29,8 @@ public class SimpleView implements View{
         font.getData().setScale(2.5f);
     }
 
-    public void drawGUI() {
-
-    }
-
     @Override
-    public void draw(int level) throws Exception { // gets field and draws on screen
+    public void draw(int level)  { // gets field and draws on screen
         ScreenUtils.clear(0.35f, 0.35f, 0.35f, 1);
         batch.begin();
 
@@ -42,13 +38,12 @@ public class SimpleView implements View{
         float gp = 15.0f / 100;
         float pp = 10.0f / 100;
 
-        int width = (int) (Gdx.graphics.getWidth());
-        int height = (int) (Gdx.graphics.getHeight());
+        int width = (Gdx.graphics.getWidth());
+        int height = (Gdx.graphics.getHeight());
         float sw = ((float) width * (1.0f - pp)) / model.getFieldSize().xValue;
         float sh = ((float) height * (1.0f - gp)) / model.getFieldSize().yValue;
 
         float emoji_pos_x = (width) / 2.5f;
-        float emoji_pos_y = height;
         boolean inputLMB = left_click_released();
         boolean inputRMB = right_click_released();
         // iterate for every tile
@@ -74,10 +69,10 @@ public class SimpleView implements View{
         if (model.won()) {
             emoji = new Texture("04_emoji3.png");
         }
-        batch.draw(emoji, (emoji_pos_x) , (emoji_pos_y - (float) (emoji.getHeight() * 5 * height) /600), (float) ((emoji.getHeight() * 5) * width) /800, (float) ((emoji.getWidth() * 5) * height) /600);
+        batch.draw(emoji, (emoji_pos_x) , (height - (float) (emoji.getHeight() * 5 * height) /600), (float) ((emoji.getHeight() * 5) * width) /800, (float) ((emoji.getWidth() * 5) * height) /600);
 
         // reassigned for every window size changes
-        batch.getProjectionMatrix().setToOrtho2D(0, 0, (int) (width), (int) (height));
+        batch.getProjectionMatrix().setToOrtho2D(0, 0, (width), (height));
 
         if (!model.dead() && !model.won()) {            //handling all clicks
             if (inputLMB || inputRMB) {
@@ -85,7 +80,7 @@ public class SimpleView implements View{
                 int y = (int) ((height - Gdx.input.getY()) / sh);
                 if(inputLMB)
                     model.leftClick(new Coordinates(x, y, level));
-                else if(inputRMB)
+                else
                     model.rightClick(new Coordinates(x, y, level));
 
             }
@@ -99,20 +94,11 @@ public class SimpleView implements View{
         }
     }
 
-    boolean left_click_begin(){
-        return Gdx.input.isButtonPressed(Input.Buttons.LEFT) && procCnt - leftLast > 1;
-    }
     boolean left_clicked(){
         return Gdx.input.isButtonPressed(Input.Buttons.LEFT);
     }
     boolean left_click_released(){
         return !Gdx.input.isButtonPressed(Input.Buttons.LEFT) && procCnt - leftLast == 1;
-    }
-    boolean right_click_begin(){
-        return Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && procCnt - rightLast > 1;
-    }
-    boolean right_clicked(){
-        return Gdx.input.isButtonPressed(Input.Buttons.RIGHT);
     }
     boolean right_click_released(){
         return !Gdx.input.isButtonPressed(Input.Buttons.RIGHT) && procCnt - rightLast == 1;

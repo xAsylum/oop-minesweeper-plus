@@ -64,11 +64,6 @@ public class SimpleBoard implements Board {
     }
 
     @Override
-    public int getNoFields() {
-        return size.zValue*size.yValue*size.zValue;
-    }
-
-    @Override
     public Set<Spot> getNeighbourhood(Coordinates position) {
         Set<Spot> result = new HashSet<>();
         Set<Coordinates> temp;
@@ -86,11 +81,6 @@ public class SimpleBoard implements Board {
         if(!position.bounded(size))
             return null;
         return fields[position.xValue][position.yValue][position.zValue];
-    }
-
-    @Override
-    public boolean initialized() {
-        return minefield != null;
     }
 
     @Override

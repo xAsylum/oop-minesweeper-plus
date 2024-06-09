@@ -2,7 +2,6 @@ package minesweeper.plus;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import minesweeper.plus.views.Menu;
 
 public class Program {
     public static void main(String[] args) {        //HERE BE DRAGONS

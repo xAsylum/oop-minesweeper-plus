@@ -5,7 +5,7 @@ import java.util.Random;
 import java.util.Set;
 
 public class SimpleMinefield implements Minefield {
-    private final int width, height, depth, noMines;
+    private final int width, height, depth;
     private final Proximity proxy;
     private final boolean[][][] table;
 
@@ -13,12 +13,10 @@ public class SimpleMinefield implements Minefield {
         this.width = size.xValue;
         this.height = size.yValue;
         this.depth = size.zValue;
-        this.noMines = noMines;
         if(!firstGuess.bounded(getSize()))
             throw new OutOfBoundsException();
         table = new boolean[width][height][depth];
         proxy = new N10Proximity();         //hard-coded for now
-
 
         int bound = width*height*depth-1;
         if(noMines > bound || noMines < 0)

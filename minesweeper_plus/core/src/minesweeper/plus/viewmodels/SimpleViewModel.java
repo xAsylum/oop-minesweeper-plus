@@ -35,8 +35,6 @@ public class SimpleViewModel implements ViewModel{
 
         Map<Coordinates, SpotValues> uncovered = board.getSpot(c).leftClick();
         for(Map.Entry<Coordinates, SpotValues> e : uncovered.entrySet()) {
-            if(e.getValue() == SpotValues.MINE)
-                System.out.println("You lost! Hit a mine at " + e.getKey());
             updateRenderTable(e.getKey(), e.getValue());
         }
     }

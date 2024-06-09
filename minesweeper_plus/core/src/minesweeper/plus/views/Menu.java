@@ -31,7 +31,6 @@ import static minesweeper.plus.views.Menu.MenuToRender.*;
 
 public class Menu extends ScreenAdapter {
 
-
     enum MenuToRender {
       MainMenu,
       Options
@@ -62,7 +61,6 @@ public class Menu extends ScreenAdapter {
     void setupStyles() {
         buttonStyles = new HashMap<>();
         labelStyles = new HashMap<>();
-
 
         LabelStyle title = new LabelStyle();
         title.font = font;
@@ -128,7 +126,6 @@ public class Menu extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         menuStage.act(Gdx.graphics.getDeltaTime());
 
-
         TextButton playButton = new TextButton("", buttonStyles.get("play"));
         playButton.setTransform(true);
         playButton.setWidth(100);
@@ -138,8 +135,8 @@ public class Menu extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 createdLevel = false;
                 printLevel = true;
-                }
-        });
+            }
+        } );
 
         TextButton settingsButton = new TextButton("", buttonStyles.get("settings"));
         menuStage.addActor(playButton);
@@ -161,10 +158,7 @@ public class Menu extends ScreenAdapter {
         title.setFontScale(2, 2);
         title.setPosition((Gdx.graphics.getWidth() - 2 * title.getWidth())/2.0f, Gdx.graphics.getHeight() - 6 * title.getHeight());
         menuStage.addActor(title);
-
     }
-
-
 
     void setupLevel() {
         Gdx.input.setInputProcessor(gameMenuStage);
@@ -178,7 +172,7 @@ public class Menu extends ScreenAdapter {
             level = 0;
             updateBlock.accept(0);
         } catch (OutOfBoundsException e) {
-            System.out.println("Wrong starting conditions");
+            //System.out.println("Wrong starting conditions");
             createdLevel = false;
             printLevel = false;
         }
@@ -224,7 +218,7 @@ public class Menu extends ScreenAdapter {
                 public void clicked(InputEvent event, float x, float y) {
                     if( finalI== 0) {
                         if(boardBombsCount < 63999)
-                        boardBombsCount++;
+                            boardBombsCount++;
                         nice[finalI + 12].setText(String.valueOf(boardBombsCount));
                     }
                     else if( finalI== 1) {
@@ -242,7 +236,6 @@ public class Menu extends ScreenAdapter {
                             boardX++;
                         nice[finalI + 12].setText(String.valueOf(boardX));
                     }
-
                 }
             });
             nice[i+4].addListener(new ClickListener() {
@@ -268,7 +261,6 @@ public class Menu extends ScreenAdapter {
                             boardX--;
                         nice[finalI + 12].setText(String.valueOf(boardX));
                     }
-
                 }
             });
             nice[i].setWidth(60);
@@ -290,7 +282,6 @@ public class Menu extends ScreenAdapter {
             optionsStage.addActor(nice[i+8]);
             optionsStage.addActor(nice[i+12]);
         }
-
     }
     void createGameMenu() {
         gameMenuStage = new Stage();
@@ -325,7 +316,6 @@ public class Menu extends ScreenAdapter {
                 updateBlock.accept(level);
             }
         });
-
 
         TextButton exitButton = new TextButton("", buttonStyles.get("exit"));
         exitButton.setTransform(true);
@@ -377,10 +367,6 @@ public class Menu extends ScreenAdapter {
                     setupLevel();
                 }
                 view.draw(level);
-                if(board.dead() || board.dead()) { //end game
-                    //Gdx.input.setInputProcessor(menuStage);
-                    ///printLevel = false; // add timer or a button to retry
-                }
                 if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
                     ++level; if(level >= board.getSize().zValue){level=board.getSize().zValue-1;}
                     updateBlock.accept(level);
@@ -405,20 +391,17 @@ public class Menu extends ScreenAdapter {
                     optionsStage.draw();
                 }
             }
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
     }
 
     @Override
     public void resize (int width, int height) {
         menuStage.getViewport().update(width, height, true);
         gameMenuStage.getViewport().update(width, height, true);
+        optionsStage.getViewport().update(width, height, true);
     }
-
 
     @Override
-    public void dispose () {
-
-    }
+    public void dispose () {}
 }
 
