@@ -1,15 +1,16 @@
 package minesweeper.plus.views;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
@@ -18,13 +19,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import minesweeper.plus.core.Coordinates;
 import minesweeper.plus.core.OutOfBoundsException;
-import minesweeper.plus.services.Board;
 import minesweeper.plus.services.SimpleBoard;
 import minesweeper.plus.viewmodels.SimpleViewModel;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import static com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.*;
 
 public class Menu extends ScreenAdapter {
 
@@ -39,53 +41,68 @@ public class Menu extends ScreenAdapter {
     boolean createdLevel = false;
 
     private Consumer<Integer> updateBlock;
-    Map<String, TextButtonStyle> styles;
+    Map<String, TextButtonStyle> buttonStyles;
+    Map<String, LabelStyle> labelStyles;
+    void setupFonts() {
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("pixelFont.ttf"));
+        FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+        font = generator.generateFont(parameter);
+    }
 
     void setupStyles() {
-        styles = new HashMap<>();
+        buttonStyles = new HashMap<>();
+        labelStyles = new HashMap<>();
+
+
+        LabelStyle title = new LabelStyle();
+        title.font = font;
+        labelStyles.put("title", title);
+
         TextButtonStyle playButtonStyle = new TextButtonStyle();
         playButtonStyle.up = new TextureRegionDrawable(new Texture("menu_button_play.png"));
         playButtonStyle.down = new TextureRegionDrawable(new Texture("menu_button_play.png"));
-        playButtonStyle.font = new BitmapFont();
-        styles.put("play", playButtonStyle);
+        playButtonStyle.font = font;
+        buttonStyles.put("play", playButtonStyle);
 
         TextButtonStyle settingsButtonStyle = new TextButtonStyle();
         settingsButtonStyle.up = new TextureRegionDrawable(new Texture("menu_settings_button.png"));
         settingsButtonStyle.down = new TextureRegionDrawable(new Texture("menu_settings_button.png"));
         settingsButtonStyle.font = new BitmapFont();
-        styles.put("settings", settingsButtonStyle);
+        buttonStyles.put("settings", settingsButtonStyle);
 
         TextButtonStyle buttonUpStyle = new TextButtonStyle();
         buttonUpStyle.up = new TextureRegionDrawable(new Texture("game_button_up.png"));
         buttonUpStyle.down = new TextureRegionDrawable(new Texture("game_button_up.png"));
         buttonUpStyle.font = new BitmapFont();
-        styles.put("up", buttonUpStyle);
+        buttonStyles.put("up", buttonUpStyle);
 
         TextButtonStyle buttonDownStyle = new TextButtonStyle();
         buttonDownStyle.up = new TextureRegionDrawable(new Texture("game_button_down.png"));
         buttonDownStyle.down = new TextureRegionDrawable(new Texture("game_button_down.png"));
         buttonDownStyle.font = new BitmapFont();
-        styles.put("down", buttonDownStyle);
+        buttonStyles.put("down", buttonDownStyle);
 
         TextButtonStyle blockStyle = new TextButtonStyle();
         blockStyle.up = new TextureRegionDrawable(new Texture("menu_button.png"));
         blockStyle.down = new TextureRegionDrawable(new Texture("menu_button.png"));
         blockStyle.font = new BitmapFont();
-        styles.put("block", blockStyle);
+        buttonStyles.put("block", blockStyle);
 
 
         TextButtonStyle exitStyle = new TextButtonStyle();
         exitStyle.up = new TextureRegionDrawable(new Texture("game_button_exit.png"));
         exitStyle.down = new TextureRegionDrawable(new Texture("game_button_exit.png"));
         exitStyle.font = new BitmapFont();
-        styles.put("exit", exitStyle);
+        buttonStyles.put("exit", exitStyle);
     }
 
     void createMenu() {
         menuStage = new Stage();
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         menuStage.act(Gdx.graphics.getDeltaTime());
-        TextButton playButton = new TextButton("", styles.get("play"));
+
+
+        TextButton playButton = new TextButton("", buttonStyles.get("play"));
         playButton.setTransform(true);
         playButton.setWidth(100);
         playButton.setHeight(100);
@@ -97,13 +114,19 @@ public class Menu extends ScreenAdapter {
             }
         });
 
-        TextButton settingsButton = new TextButton("", styles.get("settings"));
+        TextButton settingsButton = new TextButton("", buttonStyles.get("settings"));
         menuStage.addActor(playButton);
         settingsButton.setTransform(true);
         settingsButton.setWidth(100);
         settingsButton.setHeight(100);
         settingsButton.setPosition(Gdx.graphics.getWidth() - 2 * settingsButton.getWidth() - 100, 100);
         menuStage.addActor(settingsButton);
+
+        Label title = new Label("Minesweeper+", labelStyles.get("title"));
+        title.setColor(0, 0, 0, 1);
+        title.setFontScale(2, 2);
+        title.setPosition((Gdx.graphics.getWidth() - 2 * title.getWidth())/2.0f, Gdx.graphics.getHeight() - 6 * title.getHeight());
+        menuStage.addActor(title);
 
     }
 
@@ -112,8 +135,8 @@ public class Menu extends ScreenAdapter {
     void setupLevel() {
         Gdx.input.setInputProcessor(gameMenuStage);
         try {
-            Coordinates boardSize = new Coordinates(14, 10, 3);            //change board size here!
-            int numberOfMines = 25;            //change number of mines here!
+            Coordinates boardSize = new Coordinates(10, 10, 3);            //change board size here!
+            int numberOfMines = 1;            //change number of mines here!
 
             board = new SimpleBoard(boardSize, numberOfMines);
             view = new SimpleView(new SimpleViewModel(board));
@@ -130,7 +153,7 @@ public class Menu extends ScreenAdapter {
     void createGameMenu() {
         gameMenuStage = new Stage();
 
-        TextButton upButton = new TextButton("", styles.get("up"));
+        TextButton upButton = new TextButton("", buttonStyles.get("up"));
         upButton.setTransform(true);
         upButton.setWidth(60);
         upButton.setHeight(60);
@@ -146,7 +169,7 @@ public class Menu extends ScreenAdapter {
         });
         gameMenuStage.addActor(upButton);
 
-        TextButton downButton = new TextButton("", styles.get("down"));
+        TextButton downButton = new TextButton("", buttonStyles.get("down"));
         downButton.setTransform(true);
         downButton.setWidth(60);
         downButton.setHeight(60);
@@ -162,7 +185,7 @@ public class Menu extends ScreenAdapter {
         });
 
 
-        TextButton exitButton = new TextButton("", styles.get("exit"));
+        TextButton exitButton = new TextButton("", buttonStyles.get("exit"));
         exitButton.setTransform(true);
         exitButton.setWidth(60);
         exitButton.setHeight(60);
@@ -174,7 +197,7 @@ public class Menu extends ScreenAdapter {
             }
         });
 
-        TextButton block = new TextButton("", styles.get("block"));
+        TextButton block = new TextButton("", buttonStyles.get("block"));
         block.setTransform(true);
         block.setWidth(60);
         block.setHeight(60);
@@ -190,6 +213,7 @@ public class Menu extends ScreenAdapter {
 
     @Override
     public void show() {
+        setupFonts();
         setupStyles();
         createMenu();
         createGameMenu();
