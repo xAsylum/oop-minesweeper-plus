@@ -178,9 +178,9 @@ public class Menu extends ScreenAdapter {
         block.setTransform(true);
         block.setWidth(60);
         block.setHeight(60);
-        block.setPosition(Gdx.graphics.getWidth() - block.getWidth() - 2, upButton.getY() - block.getHeight());
+        block.setPosition(upButton.getX(), upButton.getY() - block.getHeight());
         updateBlock = (n) -> {
-            block.setPosition(Gdx.graphics.getWidth() - block.getWidth() - 2, (board.getSize().zValue - n - 1) * (upButton.getY() - downButton.getY())/board.getSize().zValue + block.getHeight());
+            block.setPosition(upButton.getX(), (board.getSize().zValue - n - 1) * (upButton.getY() - downButton.getY())/board.getSize().zValue + block.getHeight());
         };
         gameMenuStage.addActor(block);
 
