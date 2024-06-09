@@ -23,7 +23,7 @@ public class SimpleViewModel implements ViewModel{
                     renderTable[i][j][k] = SpotValues.HIDDEN; //-2 means field unseen
                 }
     }
-SpotValues[][][] renderTable;
+    SpotValues[][][] renderTable;
     private void updateRenderTable(Coordinates c, SpotValues v) {
         renderTable[c.xValue][c.yValue][c.zValue] = v;
     }
@@ -44,6 +44,7 @@ SpotValues[][][] renderTable;
     public void rightClick(Coordinates c) {
         if(!c.bounded(getFieldSize()))
             return;
+
         board.getSpot(c).rightClick();
         updateRenderTable(c, board.getSpot(c).getValue());
     }
@@ -59,7 +60,6 @@ SpotValues[][][] renderTable;
     }
 
     @Override
-
     public SpotValues renderAtCoords(Coordinates c) {
         return renderTable[c.xValue][c.yValue][c.zValue];
     } //returns what to render on specific coords
