@@ -1,4 +1,4 @@
-package minesweeper.plus.services;
+package minesweeper.plus.core;
 
 public enum SpotValues {
     FLAG, MINE, HIDDEN,

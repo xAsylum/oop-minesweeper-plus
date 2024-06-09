@@ -1,6 +1,6 @@
 package minesweeper.plus.views;
 
-import minesweeper.plus.services.SpotValues;
+import minesweeper.plus.core.SpotValues;
 
 public interface SpotTextures {
 

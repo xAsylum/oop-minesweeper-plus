@@ -2,7 +2,7 @@ package minesweeper.plus.viewmodels;
 
 import minesweeper.plus.core.Coordinates;
 import minesweeper.plus.services.Board;
-import minesweeper.plus.services.SpotValues;
+import minesweeper.plus.core.SpotValues;
 
 import java.util.*;
 

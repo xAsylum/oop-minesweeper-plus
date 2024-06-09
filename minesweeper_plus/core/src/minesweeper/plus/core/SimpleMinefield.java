@@ -1,9 +1,8 @@
 package minesweeper.plus.core;
 
-import minesweeper.plus.services.NumberToSpotValue;
-import minesweeper.plus.services.SpotValues;
-
-import java.util.*;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 public class SimpleMinefield implements Minefield {
     private final int width, height, depth, noMines;

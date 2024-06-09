@@ -1,8 +1,7 @@
-package minesweeper.plus.services;
+package minesweeper.plus.core;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 //quick translator used in communication
 public class SpotValueToNumber {
