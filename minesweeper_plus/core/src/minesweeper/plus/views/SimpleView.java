@@ -12,12 +12,7 @@ import minesweeper.plus.core.Coordinates;
 import minesweeper.plus.core.SpotValues;
 import minesweeper.plus.viewmodels.ViewModel;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class SimpleView implements View{
-    Map<String, Texture> textures = new HashMap<>();
-
     public int procCnt =0;
     int leftLast =-2;
     int rightLast =-2;
@@ -28,25 +23,7 @@ public class SimpleView implements View{
 
     public SimpleView(ViewModel viewModel){ // texture list
         getTexture = new SimpleSpotTextures();
-        textures.put("00_hidden.png", new Texture("00_hidden.png"));
-        textures.put("01_num_00.png", new Texture("01_null.png"));
-        textures.put("01_title_1.png", new Texture("01_title_1.png"));
-        textures.put("03_bomb.png", new Texture("03_bomb.png"));
-        textures.put("02_flag.png", new Texture("02_flag.png"));
-        textures.put("01_num_01.png", new Texture("01_num_01.png"));
-        textures.put("01_num_02.png", new Texture("01_num_02.png"));
-        textures.put("01_num_03.png", new Texture("01_num_03.png"));
-        textures.put("01_num_04.png", new Texture("01_num_04.png"));
-        textures.put("01_num_05.png", new Texture("01_num_05.png"));
-        textures.put("01_num_06.png", new Texture("01_num_06.png"));
-        textures.put("01_num_07.png", new Texture("01_num_07.png"));
-        textures.put("01_num_08.png", new Texture("01_num_08.png"));
-        textures.put("01_num_09.png", new Texture("01_num_09.png"));
-        textures.put("01_num_10.png", new Texture("01_num_10.png"));
-        textures.put("04_emoji1.png", new Texture("04_emoji1.png"));
-        textures.put("04_emoji2.png", new Texture("04_emoji2.png"));
-        textures.put("04_emoji3.png", new Texture("04_emoji3.png"));
-        textures.put("04_emoji4.png", new Texture("04_emoji4.png"));
+
         model = viewModel;
         font.setColor(Color.GOLD);
         font.getData().setScale(2.5f);
@@ -74,32 +51,30 @@ public class SimpleView implements View{
         float emoji_pos_y = height;
         boolean inputLMB = left_click_released();
         boolean inputRMB = right_click_released();
-        // iterate for every mine
+        // iterate for every tile
         for (int y = 0; y < model.getFieldSize().yValue; ++y) {
             for (int x = 0; x < model.getFieldSize().xValue; ++x) {
                 SpotValues value = model.renderAtCoords(new Coordinates(x, y, level));
 
-                String txt_nr = "04_emoji1.png";
-                Texture t = textures.get(getTexture.getTexture(value));
-                batch.draw(t, x * sw, y * sh,
+                Texture tile = getTexture.getTexture(value);
+                batch.draw(tile, x * sw, y * sh,
                         sw, sh, 0, 0,
-                        t.getWidth(), t.getHeight(), false, false);
+                        tile.getWidth(), tile.getHeight(), false, false);
             }
         }
 
-        String emoji_text = "04_emoji1.png";
+        Texture emoji = new Texture("04_emoji1.png");
         if (!model.dead()) {
             if (left_clicked()) {
-                emoji_text = "04_emoji4.png";
+                emoji = new Texture("04_emoji4.png");
             }
         } else {
-            emoji_text = "04_emoji2.png";
+            emoji = new Texture("04_emoji2.png");
         }
         if (model.won()) {
-            emoji_text = "04_emoji3.png";
+            emoji = new Texture("04_emoji3.png");
         }
-        Texture t = textures.get(emoji_text);
-        batch.draw(t, (emoji_pos_x) , (emoji_pos_y - (float) (t.getHeight() * 5 * height) /600), (float) ((t.getHeight() * 5) * width) /800, (float) ((t.getWidth() * 5) * height) /600);
+        batch.draw(emoji, (emoji_pos_x) , (emoji_pos_y - (float) (emoji.getHeight() * 5 * height) /600), (float) ((emoji.getHeight() * 5) * width) /800, (float) ((emoji.getWidth() * 5) * height) /600);
 
         // reassigned for every window size changes
         batch.getProjectionMatrix().setToOrtho2D(0, 0, (int) (width), (int) (height));
