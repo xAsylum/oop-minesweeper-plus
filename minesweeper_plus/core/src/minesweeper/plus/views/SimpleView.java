@@ -51,6 +51,11 @@ public class SimpleView implements View{
         font.setColor(Color.GOLD);
         font.getData().setScale(2.5f);
     }
+
+    public void drawGUI() {
+
+    }
+
     @Override
     public void draw(int level) throws Exception { // gets field and draws on screen
         ScreenUtils.clear(0.35f, 0.35f, 0.35f, 1);
