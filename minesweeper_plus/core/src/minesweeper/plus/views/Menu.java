@@ -2,7 +2,6 @@ package minesweeper.plus.views;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -17,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
-import jdk.tools.jmod.Main;
 import minesweeper.plus.core.Coordinates;
 import minesweeper.plus.core.OutOfBoundsException;
 import minesweeper.plus.services.SimpleBoard;
@@ -53,7 +51,7 @@ public class Menu extends ScreenAdapter {
     private Consumer<Integer> updateBlock;
     Map<String, TextButtonStyle> buttonStyles;
     Map<String, LabelStyle> labelStyles;
-    private int x = 10, y = 10, z = 5, bombsCount = 10;
+    private Integer boardX = 10, boardY = 10, boardZ = 5, boardBombsCount = 10;
     void setupFonts() {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("pixelFont.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
@@ -94,8 +92,8 @@ public class Menu extends ScreenAdapter {
         buttonStyles.put("inc", buttonIncrStyle);
 
         TextButtonStyle buttonDecrStyle = new TextButtonStyle();
-        buttonDecrStyle.up = new TextureRegionDrawable(new Texture("game_button_up.png"));
-        buttonDecrStyle.down = new TextureRegionDrawable(new Texture("game_button_up.png"));
+        buttonDecrStyle.up = new TextureRegionDrawable(new Texture("menu_button_decr.png"));
+        buttonDecrStyle.down = new TextureRegionDrawable(new Texture("menu_button_decr.png"));
         buttonDecrStyle.font = new BitmapFont();
         buttonStyles.put("decr", buttonDecrStyle);
 
@@ -108,9 +106,14 @@ public class Menu extends ScreenAdapter {
         TextButtonStyle blockStyle = new TextButtonStyle();
         blockStyle.up = new TextureRegionDrawable(new Texture("menu_button.png"));
         blockStyle.down = new TextureRegionDrawable(new Texture("menu_button.png"));
-        blockStyle.font = new BitmapFont();
+        blockStyle.font = font;
         buttonStyles.put("block", blockStyle);
 
+        TextButtonStyle blockLongStyle = new TextButtonStyle();
+        blockLongStyle.up = new TextureRegionDrawable(new Texture("menu_button_long.png"));
+        blockLongStyle.down = new TextureRegionDrawable(new Texture("menu_button_long.png"));
+        blockLongStyle.font = font;
+        buttonStyles.put("block_long", blockLongStyle);
 
         TextButtonStyle exitStyle = new TextButtonStyle();
         exitStyle.up = new TextureRegionDrawable(new Texture("game_button_exit.png"));
@@ -165,8 +168,8 @@ public class Menu extends ScreenAdapter {
     void setupLevel() {
         Gdx.input.setInputProcessor(gameMenuStage);
         try {
-            Coordinates boardSize = new Coordinates(x, y, z);            //change board size here!
-            int numberOfMines = bombsCount;            //change number of mines here!
+            Coordinates boardSize = new Coordinates(boardX, boardY, boardZ);            //change board size here!
+            int numberOfMines = boardBombsCount;            //change number of mines here!
 
             board = new SimpleBoard(boardSize, numberOfMines);
             view = new SimpleView(new SimpleViewModel(board));
@@ -193,6 +196,96 @@ public class Menu extends ScreenAdapter {
             }
         });
         optionsStage.addActor(exitButton);
+
+        TextButton incrX = new TextButton("", buttonStyles.get("inc"));
+        TextButton incrY = new TextButton("", buttonStyles.get("inc"));
+        TextButton incrZ = new TextButton("", buttonStyles.get("inc"));
+        TextButton incrBombs = new TextButton("", buttonStyles.get("inc"));
+        TextButton decrX = new TextButton("", buttonStyles.get("decr"));
+        TextButton decrY = new TextButton("", buttonStyles.get("decr"));
+        TextButton decrZ = new TextButton("", buttonStyles.get("decr"));
+        TextButton decrBombs = new TextButton("", buttonStyles.get("decr"));
+        TextButton xLabel = new TextButton("Width", buttonStyles.get("block_long"));
+        TextButton yLabel = new TextButton("Height", buttonStyles.get("block_long"));
+        TextButton zLabel = new TextButton("Depth", buttonStyles.get("block_long"));
+        TextButton bombLabel = new TextButton("No. Bombs", buttonStyles.get("block_long"));
+        TextButton xCount = new TextButton("", buttonStyles.get("block"));
+        TextButton yCount = new TextButton("", buttonStyles.get("block"));
+        TextButton zCount = new TextButton("", buttonStyles.get("block"));
+        TextButton bombCount = new TextButton("", buttonStyles.get("block"));
+        TextButton nice[] = {incrBombs, incrZ, incrY, incrX , decrBombs, decrZ, decrY, decrX, bombLabel, zLabel, yLabel, xLabel, bombCount, zCount, yCount, xCount};
+        Integer nice2[] = {boardBombsCount, boardZ, boardY, boardX};
+        for (int i = 0; i < 4; i++) {
+            int finalI = i;
+            nice[finalI + 12].setText(String.valueOf(nice2[finalI]));
+            nice[i].addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if( finalI== 0) {
+                        boardBombsCount++;
+                        nice[finalI + 12].setText(String.valueOf(boardBombsCount));
+                    }
+                    else if( finalI== 1) {
+                        boardZ++;
+                        nice[finalI + 12].setText(String.valueOf(boardZ));
+                    }
+                    else if( finalI== 2) {
+                        boardY++;
+                        nice[finalI + 12].setText(String.valueOf(boardY));
+                    }
+                    else {
+                        boardX++;
+                        nice[finalI + 12].setText(String.valueOf(boardX));
+                    }
+
+                }
+            });
+            nice[i+4].addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if( finalI== 0) {
+                        if(boardBombsCount > 1)
+                            boardBombsCount--;
+                        nice[finalI + 12].setText(String.valueOf(boardBombsCount));
+                    }
+                    else if( finalI== 1) {
+                        if (boardZ > 1)
+                            boardZ--;
+                        nice[finalI + 12].setText(String.valueOf(boardZ));
+                    }
+                    else if( finalI== 2) {
+                        if(boardY > 1)
+                            boardY--;
+                        nice[finalI + 12].setText(String.valueOf(boardY));
+                    }
+                    else {
+                        if(boardX > 1)
+                            boardX--;
+                        nice[finalI + 12].setText(String.valueOf(boardX));
+                    }
+
+                }
+            });
+            nice[i].setWidth(60);
+            nice[i].setHeight(60);
+            nice[i+4].setWidth(60);
+            nice[i+4].setHeight(60);
+            nice[i].setPosition(8*nice[i].getWidth(), 2*(i + 0.25f)*nice[i].getHeight());
+            nice[i+4].setPosition(7*nice[i].getWidth(), 2*(i + 0.25f)*nice[i+4].getHeight());
+            nice[i+8].setWidth(240);
+            nice[i+8].setHeight(60);
+            nice[i+8].setPosition(nice[i].getWidth(), 2*(i + 0.25f)*nice[i+4].getHeight());
+            nice[i+8].setColor(0.45f, 0.45f, 0.45f, 1f);
+            nice[i+12].setColor(0.45f, 0.45f, 0.45f, 1f);
+            nice[i+12].setWidth(60);
+            nice[i+12].setHeight(60);
+            nice[i+12].setPosition(6*nice[i].getWidth(), 2*(i + 0.25f)*nice[i+4].getHeight());
+            optionsStage.addActor(nice[i]);
+            optionsStage.addActor(nice[i+4]);
+            optionsStage.addActor(nice[i+8]);
+            optionsStage.addActor(nice[i+12]);
+        }
+
     }
     void createGameMenu() {
         gameMenuStage = new Stage();
@@ -247,8 +340,8 @@ public class Menu extends ScreenAdapter {
         block.setHeight(60);
         block.setPosition(upButton.getX(), upButton.getY() - block.getHeight());
         updateBlock = (n) -> {
-            if(z > 1)
-                block.setPosition(upButton.getX(),  upButton.getHeight()  + ((z - n - 1) * (upButton.getY() -  2 * upButton.getHeight()))/(z - 1));
+            if(boardZ > 1)
+                block.setPosition(upButton.getX(),  upButton.getHeight()  + ((boardZ - n - 1) * (upButton.getY() -  2 * upButton.getHeight()))/(boardZ - 1));
             else
                 block.setPosition(upButton.getX(), upButton.getHeight());
         };
@@ -286,7 +379,7 @@ public class Menu extends ScreenAdapter {
                 gameMenuStage.act(delta);
                 gameMenuStage.draw();
             } else {
-                ScreenUtils.clear(255, 255, 255, 0);
+                ScreenUtils.clear(0.35f, 0.35f, 0.35f, 1);
 
                 board = null;
                 view = null;
