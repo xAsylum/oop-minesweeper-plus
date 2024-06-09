@@ -1,5 +1,5 @@
 package minesweeper.plus.core;
 
 public class OutOfBoundsException extends Exception {
-    public OutOfBoundsException() {};
+    public OutOfBoundsException() {}
 }

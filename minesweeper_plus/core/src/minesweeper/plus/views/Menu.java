@@ -34,14 +34,13 @@ public class Menu extends ScreenAdapter {
     enum MenuToRender {
       MainMenu,
       Options
-    };
+    }
 
     MenuToRender whatToRender = MainMenu;
 
     View view;
     SimpleBoard board;
     int level=0;
-    private Table table;
     private BitmapFont font;
     private Stage menuStage;
     private Stage gameMenuStage;
@@ -208,8 +207,8 @@ public class Menu extends ScreenAdapter {
         TextButton yCount = new TextButton("", buttonStyles.get("block"));
         TextButton zCount = new TextButton("", buttonStyles.get("block"));
         TextButton bombCount = new TextButton("", buttonStyles.get("block"));
-        TextButton nice[] = {incrBombs, incrZ, incrY, incrX , decrBombs, decrZ, decrY, decrX, bombLabel, zLabel, yLabel, xLabel, bombCount, zCount, yCount, xCount};
-        Integer nice2[] = {boardBombsCount, boardZ, boardY, boardX};
+        TextButton[] nice = {incrBombs, incrZ, incrY, incrX , decrBombs, decrZ, decrY, decrX, bombLabel, zLabel, yLabel, xLabel, bombCount, zCount, yCount, xCount};
+        Integer[] nice2 = {boardBombsCount, boardZ, boardY, boardX};
         for (int i = 0; i < 4; i++) {
             int finalI = i;
             nice[finalI + 12].setText(String.valueOf(nice2[finalI]));
