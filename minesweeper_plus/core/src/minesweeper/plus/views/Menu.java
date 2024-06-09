@@ -72,6 +72,13 @@ public class Menu extends ScreenAdapter {
         blockStyle.down = new TextureRegionDrawable(new Texture("menu_button.png"));
         blockStyle.font = new BitmapFont();
         styles.put("block", blockStyle);
+
+
+        TextButtonStyle exitStyle = new TextButtonStyle();
+        exitStyle.up = new TextureRegionDrawable(new Texture("game_button_exit.png"));
+        exitStyle.down = new TextureRegionDrawable(new Texture("game_button_exit.png"));
+        exitStyle.font = new BitmapFont();
+        styles.put("exit", exitStyle);
     }
 
     void createMenu() {
@@ -123,15 +130,6 @@ public class Menu extends ScreenAdapter {
     void createGameMenu() {
         gameMenuStage = new Stage();
 
-        TextButton block = new TextButton("", styles.get("block"));
-        block.setTransform(true);
-        block.setWidth(60);
-        block.setHeight(60);
-        block.setPosition(Gdx.graphics.getWidth() - block.getWidth() - 2, Gdx.graphics.getHeight() - 187);
-        updateBlock = (n) -> {
-            block.setPosition(Gdx.graphics.getWidth() - block.getWidth() - 2, (board.getSize().zValue - n - 1) * (Gdx.graphics.getHeight() - 130)/board.getSize().zValue + 60);
-        };
-        gameMenuStage.addActor(block);
         TextButton upButton = new TextButton("", styles.get("up"));
         upButton.setTransform(true);
         upButton.setWidth(60);
@@ -163,7 +161,31 @@ public class Menu extends ScreenAdapter {
             }
         });
 
+
+        TextButton exitButton = new TextButton("", styles.get("exit"));
+        exitButton.setTransform(true);
+        exitButton.setWidth(60);
+        exitButton.setHeight(60);
+        exitButton.setPosition(Gdx.graphics.getWidth() - exitButton.getWidth() - 2, Gdx.graphics.getHeight() - exitButton.getHeight() * 1.1f);
+        exitButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                printLevel = false;
+                Gdx.input.setInputProcessor(menuStage);
+            }
+        });
+
+        TextButton block = new TextButton("", styles.get("block"));
+        block.setTransform(true);
+        block.setWidth(60);
+        block.setHeight(60);
+        block.setPosition(Gdx.graphics.getWidth() - block.getWidth() - 2, upButton.getY() - block.getHeight());
+        updateBlock = (n) -> {
+            block.setPosition(Gdx.graphics.getWidth() - block.getWidth() - 2, (board.getSize().zValue - n - 1) * (upButton.getY() - downButton.getY())/board.getSize().zValue + block.getHeight());
+        };
+        gameMenuStage.addActor(block);
+
         gameMenuStage.addActor(downButton);
+        gameMenuStage.addActor(exitButton);
     }
 
     @Override
@@ -186,8 +208,8 @@ public class Menu extends ScreenAdapter {
                 }
                 view.draw(level);
                 if(board.dead() || board.dead()) { //end game
-                    Gdx.input.setInputProcessor(menuStage);
-                    printLevel = false; // add timer or a button to retry
+                    //Gdx.input.setInputProcessor(menuStage);
+                    ///printLevel = false; // add timer or a button to retry
                 }
                 gameMenuStage.act(delta);
                 gameMenuStage.draw();
@@ -207,6 +229,7 @@ public class Menu extends ScreenAdapter {
     @Override
     public void resize (int width, int height) {
         menuStage.getViewport().update(width, height, true);
+        gameMenuStage.getViewport().update(width, height, true);
     }
 
 

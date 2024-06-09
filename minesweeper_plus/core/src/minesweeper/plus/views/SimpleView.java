@@ -70,8 +70,8 @@ public class SimpleView implements View{
         float sw = ((float) width * (1.0f - pp)) / model.getFieldSize().xValue;
         float sh = ((float) height * (1.0f - gp)) / model.getFieldSize().yValue;
 
-        float emoji_pos_x = (width - textures.get("04_emoji1.png").getWidth()) / 2.0f;
-        float emoji_pos_y = height - textures.get("04_emoji1.png").getHeight();
+        float emoji_pos_x = (width) / 2.5f;
+        float emoji_pos_y = height;
         boolean inputLMB = left_click_released();
         boolean inputRMB = right_click_released();
         // iterate for every mine
@@ -93,12 +93,13 @@ public class SimpleView implements View{
                 emoji_text = "04_emoji4.png";
             }
         } else {
-            emoji_text = "04_emoji3.png";
-        }
-        if (model.won()) {
             emoji_text = "04_emoji2.png";
         }
-        batch.draw(textures.get(emoji_text), emoji_pos_x, emoji_pos_y);
+        if (model.won()) {
+            emoji_text = "04_emoji3.png";
+        }
+        Texture t = textures.get(emoji_text);
+        batch.draw(t, (emoji_pos_x) , (emoji_pos_y - (float) (t.getHeight() * 5 * height) /600), (float) ((t.getHeight() * 5) * width) /800, (float) ((t.getWidth() * 5) * height) /600);
 
         // reassigned for every window size changes
         batch.getProjectionMatrix().setToOrtho2D(0, 0, (int) (width), (int) (height));
