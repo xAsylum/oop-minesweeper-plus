@@ -1,6 +1,7 @@
 package minesweeper.plus.views;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -51,7 +52,7 @@ public class Menu extends ScreenAdapter {
     private Consumer<Integer> updateBlock;
     Map<String, TextButtonStyle> buttonStyles;
     Map<String, LabelStyle> labelStyles;
-    private Integer boardX = 10, boardY = 10, boardZ = 5, boardBombsCount = 10;
+    private Integer boardX = 10, boardY = 10, boardZ = 2, boardBombsCount = 21;
     void setupFonts() {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("pixelFont.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
@@ -222,19 +223,23 @@ public class Menu extends ScreenAdapter {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     if( finalI== 0) {
+                        if(boardBombsCount < 63999)
                         boardBombsCount++;
                         nice[finalI + 12].setText(String.valueOf(boardBombsCount));
                     }
                     else if( finalI== 1) {
-                        boardZ++;
+                        if(boardZ < 40)
+                            boardZ++;
                         nice[finalI + 12].setText(String.valueOf(boardZ));
                     }
                     else if( finalI== 2) {
-                        boardY++;
+                        if(boardY < 40)
+                            boardY++;
                         nice[finalI + 12].setText(String.valueOf(boardY));
                     }
                     else {
-                        boardX++;
+                        if(boardX < 40)
+                            boardX++;
                         nice[finalI + 12].setText(String.valueOf(boardX));
                     }
 
@@ -375,6 +380,14 @@ public class Menu extends ScreenAdapter {
                 if(board.dead() || board.dead()) { //end game
                     //Gdx.input.setInputProcessor(menuStage);
                     ///printLevel = false; // add timer or a button to retry
+                }
+                if(Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
+                    ++level; if(level >= board.getSize().zValue){level=board.getSize().zValue-1;}
+                    updateBlock.accept(level);
+                }
+                if(Gdx.input.isKeyJustPressed(Input.Keys.UP)){
+                    --level; if(level<0){level=0;}
+                    updateBlock.accept(level);
                 }
                 gameMenuStage.act(delta);
                 gameMenuStage.draw();
