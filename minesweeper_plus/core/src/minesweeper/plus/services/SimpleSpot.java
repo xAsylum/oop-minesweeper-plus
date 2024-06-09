@@ -2,6 +2,7 @@ package minesweeper.plus.services;
 
 import minesweeper.plus.core.Coordinates;
 import minesweeper.plus.core.OutOfBoundsException;
+import minesweeper.plus.core.SpotValues;
 
 import java.util.HashMap;
 import java.util.Map;

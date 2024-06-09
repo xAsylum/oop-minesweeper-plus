@@ -1,7 +1,7 @@
 package minesweeper.plus.viewmodels;
 
 import minesweeper.plus.core.Coordinates;
-import minesweeper.plus.services.SpotValues;
+import minesweeper.plus.core.SpotValues;
 
 public interface ViewModel {
 

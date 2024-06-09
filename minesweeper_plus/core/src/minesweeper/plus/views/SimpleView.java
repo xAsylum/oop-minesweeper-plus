@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import minesweeper.plus.core.Coordinates;
-import minesweeper.plus.services.SpotValues;
+import minesweeper.plus.core.SpotValues;
 import minesweeper.plus.viewmodels.ViewModel;
 
 import java.util.HashMap;

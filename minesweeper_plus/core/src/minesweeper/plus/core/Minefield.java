@@ -1,7 +1,5 @@
 package minesweeper.plus.core;
 
-import minesweeper.plus.services.SpotValues;
-
 import java.util.Set;
 
 //creates and stores the minefield and answers questions about it
