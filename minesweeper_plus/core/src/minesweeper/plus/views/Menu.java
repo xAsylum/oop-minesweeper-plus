@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
+import jdk.tools.jmod.Main;
 import minesweeper.plus.core.Coordinates;
 import minesweeper.plus.core.OutOfBoundsException;
 import minesweeper.plus.services.SimpleBoard;
@@ -27,8 +28,17 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import static com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.*;
+import static minesweeper.plus.views.Menu.MenuToRender.*;
 
 public class Menu extends ScreenAdapter {
+
+
+    enum MenuToRender {
+      MainMenu,
+      Options
+    };
+
+    MenuToRender whatToRender = MainMenu;
 
     View view;
     SimpleBoard board;
@@ -37,12 +47,13 @@ public class Menu extends ScreenAdapter {
     private BitmapFont font;
     private Stage menuStage;
     private Stage gameMenuStage;
+    private Stage optionsStage;
     boolean printLevel = false;
     boolean createdLevel = false;
-
     private Consumer<Integer> updateBlock;
     Map<String, TextButtonStyle> buttonStyles;
     Map<String, LabelStyle> labelStyles;
+    private int x = 10, y = 10, z = 5, bombsCount = 10;
     void setupFonts() {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("pixelFont.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
@@ -75,6 +86,18 @@ public class Menu extends ScreenAdapter {
         buttonUpStyle.down = new TextureRegionDrawable(new Texture("game_button_up.png"));
         buttonUpStyle.font = new BitmapFont();
         buttonStyles.put("up", buttonUpStyle);
+
+        TextButtonStyle buttonIncrStyle = new TextButtonStyle();
+        buttonIncrStyle.up = new TextureRegionDrawable(new Texture("menu_button_inc.png"));
+        buttonIncrStyle.down = new TextureRegionDrawable(new Texture("menu_button_inc.png"));
+        buttonIncrStyle.font = new BitmapFont();
+        buttonStyles.put("inc", buttonIncrStyle);
+
+        TextButtonStyle buttonDecrStyle = new TextButtonStyle();
+        buttonDecrStyle.up = new TextureRegionDrawable(new Texture("game_button_up.png"));
+        buttonDecrStyle.down = new TextureRegionDrawable(new Texture("game_button_up.png"));
+        buttonDecrStyle.font = new BitmapFont();
+        buttonStyles.put("decr", buttonDecrStyle);
 
         TextButtonStyle buttonDownStyle = new TextButtonStyle();
         buttonDownStyle.up = new TextureRegionDrawable(new Texture("game_button_down.png"));
@@ -111,7 +134,7 @@ public class Menu extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 createdLevel = false;
                 printLevel = true;
-            }
+                }
         });
 
         TextButton settingsButton = new TextButton("", buttonStyles.get("settings"));
@@ -120,6 +143,13 @@ public class Menu extends ScreenAdapter {
         settingsButton.setWidth(100);
         settingsButton.setHeight(100);
         settingsButton.setPosition(Gdx.graphics.getWidth() - 2 * settingsButton.getWidth() - 100, 100);
+        settingsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.setInputProcessor(optionsStage);
+                whatToRender = Options;
+            }
+        });
         menuStage.addActor(settingsButton);
 
         Label title = new Label("Minesweeper+", labelStyles.get("title"));
@@ -135,8 +165,8 @@ public class Menu extends ScreenAdapter {
     void setupLevel() {
         Gdx.input.setInputProcessor(gameMenuStage);
         try {
-            Coordinates boardSize = new Coordinates(10, 10, 3);            //change board size here!
-            int numberOfMines = 1;            //change number of mines here!
+            Coordinates boardSize = new Coordinates(x, y, z);            //change board size here!
+            int numberOfMines = bombsCount;            //change number of mines here!
 
             board = new SimpleBoard(boardSize, numberOfMines);
             view = new SimpleView(new SimpleViewModel(board));
@@ -149,7 +179,21 @@ public class Menu extends ScreenAdapter {
             printLevel = false;
         }
     }
-
+    void createOptionsMenu() {
+        optionsStage = new Stage();
+        TextButton exitButton = new TextButton("", buttonStyles.get("exit"));
+        exitButton.setTransform(true);
+        exitButton.setWidth(60);
+        exitButton.setHeight(60);
+        exitButton.setPosition(Gdx.graphics.getWidth() - exitButton.getWidth() - 2, Gdx.graphics.getHeight() - exitButton.getHeight() * 1.1f);
+        exitButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.setInputProcessor(menuStage);
+                whatToRender = MainMenu;
+            }
+        });
+        optionsStage.addActor(exitButton);
+    }
     void createGameMenu() {
         gameMenuStage = new Stage();
 
@@ -203,7 +247,10 @@ public class Menu extends ScreenAdapter {
         block.setHeight(60);
         block.setPosition(upButton.getX(), upButton.getY() - block.getHeight());
         updateBlock = (n) -> {
-            block.setPosition(upButton.getX(), (board.getSize().zValue - n - 1) * (upButton.getY() - downButton.getY())/board.getSize().zValue + block.getHeight());
+            if(z > 1)
+                block.setPosition(upButton.getX(),  upButton.getHeight()  + ((z - n - 1) * (upButton.getY() -  2 * upButton.getHeight()))/(z - 1));
+            else
+                block.setPosition(upButton.getX(), upButton.getHeight());
         };
         gameMenuStage.addActor(block);
 
@@ -217,6 +264,7 @@ public class Menu extends ScreenAdapter {
         setupStyles();
         createMenu();
         createGameMenu();
+        createOptionsMenu();
 
         Gdx.input.setInputProcessor(menuStage);
         menuStage.draw();
@@ -242,9 +290,14 @@ public class Menu extends ScreenAdapter {
 
                 board = null;
                 view = null;
-                menuStage.act(delta);
-
-                menuStage.draw();
+                if(whatToRender == MainMenu) {
+                    menuStage.act(delta);
+                    menuStage.draw();
+                }
+                else if (whatToRender == Options) {
+                    optionsStage.act(delta);
+                    optionsStage.draw();
+                }
             }
         } catch (Exception ignored) {
         }
