@@ -8,7 +8,7 @@ import java.util.*;
 
 public class SimpleViewModel implements ViewModel{
     List<SpotValues> defaultValues;
-    Board board; //field referenced by viewmodel
+    Board board; //field referenced by viewModel
     public SimpleViewModel(Board b) {
         defaultValues = new ArrayList<>();
         defaultValues.add(SpotValues.MINE);

@@ -8,9 +8,4 @@ public class MyGdxGame extends Game {
     public void create () {
         this.setScreen(new Menu());
     }
-
-    @Override
-    public void render () {
-        super.render();
-    }
 }

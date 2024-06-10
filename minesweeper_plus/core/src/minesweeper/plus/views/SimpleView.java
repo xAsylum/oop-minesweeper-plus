@@ -16,7 +16,7 @@ public class SimpleView implements View{
     public int procCnt =0;
     int leftLast =-2;
     int rightLast =-2;
-    SimpleSpotTextures getTexture;
+    SpotTextures getTexture;
     Batch batch = new SpriteBatch(); // screen buffer
     BitmapFont font = new BitmapFont(); // temporary, draw font
     ViewModel model;
@@ -30,7 +30,7 @@ public class SimpleView implements View{
     }
 
     @Override
-    public void draw(int level)  { // gets field and draws on screen
+    public void draw(int level) { // gets field and draws on screen
         ScreenUtils.clear(0.35f, 0.35f, 0.35f, 1);
         batch.begin();
 
