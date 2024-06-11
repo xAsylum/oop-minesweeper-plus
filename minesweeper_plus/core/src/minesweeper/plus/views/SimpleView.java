@@ -16,10 +16,10 @@ public class SimpleView implements View{
     public int procCnt =0;
     int leftLast =-2;
     int rightLast =-2;
-    SpotTextures getTexture;
-    Batch batch = new SpriteBatch(); // screen buffer
-    BitmapFont font = new BitmapFont(); // temporary, draw font
-    ViewModel model;
+    final SpotTextures getTexture;
+    final Batch batch = new SpriteBatch(); // screen buffer
+    final BitmapFont font = new BitmapFont(); // temporary, draw font
+    final ViewModel model;
 
     public SimpleView(ViewModel viewModel){ // texture list
         getTexture = new SimpleSpotTextures();
@@ -59,7 +59,7 @@ public class SimpleView implements View{
         }
 
         Texture emoji = new Texture("04_emoji1.png");
-        if (!model.dead()) {
+        if (model.alive()) {
             if (left_clicked()) {
                 emoji = new Texture("04_emoji4.png");
             }
@@ -74,7 +74,7 @@ public class SimpleView implements View{
         // reassigned for every window size changes
         batch.getProjectionMatrix().setToOrtho2D(0, 0, (width), (height));
 
-        if (!model.dead() && !model.won()) {            //handling all clicks
+        if (model.alive() && !model.won()) {            //handling all clicks
             if (inputLMB || inputRMB) {
                 int x = (int) (Gdx.input.getX() / sw);
                 int y = (int) ((height - Gdx.input.getY()) / sh);

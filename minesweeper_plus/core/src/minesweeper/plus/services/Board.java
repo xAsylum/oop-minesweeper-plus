@@ -26,6 +26,6 @@ public interface Board {
     //returns true if the game is finished, false otherwise
     boolean won();
 
-    //returns true if any bomb has already been clicked
-    boolean dead();
+    //returns true if no bomb has been clicked yet
+    boolean alive();
 }

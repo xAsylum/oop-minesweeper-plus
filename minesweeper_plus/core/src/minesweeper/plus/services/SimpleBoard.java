@@ -9,7 +9,7 @@ public class SimpleBoard implements Board {
     private final Spot[][][] fields;
     private final int noMines;
     private int noClicks = 0;
-    private boolean dead = false;
+    private boolean alive = true;
     public Minefield minefield = null;
 
     public SimpleBoard(Coordinates size, int noMines) throws OutOfBoundsException {
@@ -42,7 +42,7 @@ public class SimpleBoard implements Board {
                 noClicks++;
                 SpotValues value = minefield.clickThis(tempSpot.getPosition());
                 if(value == SpotValues.MINE)
-                    dead = true;
+                    alive = false;
                 tempSpot.setValue(value);
                 result.put(tempSpot.getPosition(), value);
                 if(value == SpotValues.N00) {
@@ -85,13 +85,12 @@ public class SimpleBoard implements Board {
 
     @Override
     public boolean won() {
-        return !dead() && noMines + noClicks == size.xValue*size.yValue*size.zValue;
+        return alive() && noMines + noClicks == size.xValue*size.yValue*size.zValue;
     }
 
     @Override
-    public boolean dead() {
-        return dead;
+    public boolean alive() {
+        return alive;
     }
-
 
 }

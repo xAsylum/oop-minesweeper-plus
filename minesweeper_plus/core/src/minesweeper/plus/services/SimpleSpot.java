@@ -29,16 +29,11 @@ public class SimpleSpot implements Spot {
     }
 
     @Override
-    public boolean rightClick() {
-        if(value == SpotValues.FLAG) {
+    public void rightClick() {
+        if(value == SpotValues.FLAG)
             value = SpotValues.HIDDEN;
-            return true;
-        }
-        else if(value == SpotValues.HIDDEN) {
+        else if(value == SpotValues.HIDDEN)
             value = SpotValues.FLAG;
-            return true;
-        }
-        return false;
     }
 
     @Override

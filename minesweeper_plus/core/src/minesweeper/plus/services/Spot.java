@@ -12,7 +12,7 @@ public interface Spot {
 
     //returns true, if the state of the Spot.isSafe() has changed successfully
     //otherwise returns false (ex. when the spot has already been clicked)
-    boolean rightClick();
+    void rightClick();
 
     //just returns the enum value of this spot
     SpotValues getValue();

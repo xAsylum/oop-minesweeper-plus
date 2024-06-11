@@ -7,7 +7,7 @@ public interface ViewModel {
 
     void leftClick(Coordinates c);
     void rightClick(Coordinates c);
-    boolean dead();
+    boolean alive();
     boolean won();
     SpotValues renderAtCoords(Coordinates c);
     Coordinates getFieldSize();

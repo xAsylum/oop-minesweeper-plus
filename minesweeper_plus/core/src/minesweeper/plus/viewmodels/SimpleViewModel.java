@@ -7,8 +7,8 @@ import minesweeper.plus.core.SpotValues;
 import java.util.*;
 
 public class SimpleViewModel implements ViewModel{
-    List<SpotValues> defaultValues;
-    Board board; //field referenced by viewModel
+    final List<SpotValues> defaultValues;
+    final Board board; //field referenced by viewModel
     public SimpleViewModel(Board b) {
         defaultValues = new ArrayList<>();
         defaultValues.add(SpotValues.MINE);
@@ -23,7 +23,7 @@ public class SimpleViewModel implements ViewModel{
                     renderTable[i][j][k] = SpotValues.HIDDEN; //-2 means field unseen
                 }
     }
-    SpotValues[][][] renderTable;
+    final SpotValues[][][] renderTable;
     private void updateRenderTable(Coordinates c, SpotValues v) {
         renderTable[c.xValue][c.yValue][c.zValue] = v;
     }
@@ -48,8 +48,8 @@ public class SimpleViewModel implements ViewModel{
     }
 
     @Override
-    public boolean dead() {
-        return board.dead();
+    public boolean alive() {
+        return board.alive();
     }
 
     @Override
