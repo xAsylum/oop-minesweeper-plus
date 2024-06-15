@@ -16,10 +16,7 @@ public class Statistics {
         }
     }
     void init(StatsIn s) {
-        if((stats.get(s.toString()) == null)) {
-            stats.put(s.toString(), new StatsOut());
-            //System.out.println("adding");
-        }
+        stats.computeIfAbsent(s.toString(), k -> new StatsOut());
     }
     public void delete() {
         try {

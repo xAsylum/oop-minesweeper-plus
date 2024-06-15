@@ -11,9 +11,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class WorkWithFiles {
-
     public static void saveStats(Map<String, StatsOut> data) throws IOException {
-
         File f = new File("data/stats.txt");
         f.getParentFile().mkdirs();
         f.createNewFile();
@@ -28,10 +26,9 @@ public class WorkWithFiles {
                 writer.newLine();
             }
             writer.close();
-        } catch (Exception ignored) {
-
-        }
+        } catch (Exception ignored) {}
     }
+
     public static Map<String, StatsOut> loadStats() throws IOException {
         Map<String, StatsOut> result = new HashMap<>();
         Path path = Paths.get("data/stats.txt");
@@ -50,5 +47,4 @@ public class WorkWithFiles {
         reader.close();
         return result;
     }
-
 }

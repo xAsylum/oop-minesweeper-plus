@@ -11,17 +11,12 @@ public class StatsIn {
         this.coords = coords;
         this.noMines = noMines;
     }
-    public Coordinates getCoords() {
-        return coords;
-    }
-    public int getNoMines() {
-        return noMines;
-    }
 
     @Override
     public String toString() {
-        return coords.toString() + " " + String.valueOf(noMines);
+        return coords.toString() + " " + noMines;
     }
+
     @Override
     public boolean equals(Object obj) {
         if(!(obj instanceof StatsIn)) return false;

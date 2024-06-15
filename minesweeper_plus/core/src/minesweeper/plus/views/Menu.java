@@ -39,7 +39,7 @@ public class Menu extends ScreenAdapter {
     }
 
     MenuToRender whatToRender = MainMenu;
-    Statistics stats = new Statistics();
+    final Statistics stats = new Statistics();
     View view;
     SimpleBoard board;
     int level=0;
@@ -398,7 +398,7 @@ public class Menu extends ScreenAdapter {
         return stats.getLooses(new StatsIn(new Coordinates(boardX, boardY, boardZ), boardBombsCount));
     }
     int getTotal() {
-        return getWins() + getLooses();
+        return stats.getTotal(new StatsIn(new Coordinates(boardX, boardY, boardZ), boardBombsCount));
     }
     void createStatisticsMenu() {
         statisticsStage = new Stage();
