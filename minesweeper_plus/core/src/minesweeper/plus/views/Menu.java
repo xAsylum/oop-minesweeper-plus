@@ -35,7 +35,8 @@ public class Menu extends ScreenAdapter {
     enum MenuToRender {
         MainMenu,
         Options,
-        Statistics
+        Statistics,
+        Info
     }
 
     MenuToRender whatToRender = MainMenu;
@@ -48,6 +49,7 @@ public class Menu extends ScreenAdapter {
     private Stage gameMenuStage;
     private Stage optionsStage;
     private Stage statisticsStage;
+    private Stage gameInfoStage;
     boolean printLevel = false;
     boolean createdLevel = false;
     private Consumer<Integer> updateBlock;
@@ -141,6 +143,51 @@ public class Menu extends ScreenAdapter {
         exitStyle.down = new TextureRegionDrawable(new Texture("game_button_exit.png"));
         exitStyle.font = new BitmapFont();
         buttonStyles.put("exit", exitStyle);
+
+
+        TextButtonStyle infoStyle = new TextButtonStyle();
+        infoStyle.up = new TextureRegionDrawable(new Texture("game_button_info.png"));
+        infoStyle.down = new TextureRegionDrawable(new Texture("game_button_info.png"));
+        infoStyle.font = new BitmapFont();
+        buttonStyles.put("info", infoStyle);
+    }
+
+    void createGameInfo() {
+        gameInfoStage = new Stage();
+
+        TextButton exitButton = new TextButton("", buttonStyles.get("exit"));
+        exitButton.setTransform(true);
+        exitButton.setWidth(60);
+        exitButton.setHeight(60);
+        exitButton.setPosition(Gdx.graphics.getWidth() - exitButton.getWidth() - 2, Gdx.graphics.getHeight() - exitButton.getHeight() * 1.1f);
+        exitButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.setInputProcessor(menuStage);
+                whatToRender = MainMenu;
+            }
+        });
+        gameInfoStage.addActor(exitButton);
+
+        Label title = new Label("Welcome to Minesweeper+, " +
+                "\nan extention of a popular game " +
+                "\nMinesweeper. This time, each " +
+                "\nfield counts the number of " +
+                "\nneighbouring bombs not only in the " +
+                "\ncurrent view, but also on the upper " +
+                "\nand lower adjacent fields. During " +
+                "\ngameplay you can travel between " +
+                "\ndifferent levels using the bar " +
+                "\nor up-down keys. Don't forget " +
+                "\nto set your board size in the " +
+                "\nsettings tab. For each setting the " +
+                "\ngame counts your wins and losses. " +
+                "\nYou can check these in statistics. " +
+                "\nDon't forget to save your progress!",
+                labelStyles.get("title"));
+        title.setColor(0, 0, 0, 1);
+        title.setFontScale(1, 1);
+        title.setPosition(50, Gdx.graphics.getHeight() - title.getHeight() - 125);
+        gameInfoStage.addActor(title);
     }
 
     void createMenu() {
@@ -176,11 +223,10 @@ public class Menu extends ScreenAdapter {
         menuStage.addActor(settingsButton);
 
         TextButton statisticsButton = new TextButton("", buttonStyles.get("statistics"));
-        menuStage.addActor(statisticsButton);
         statisticsButton.setTransform(true);
         statisticsButton.setWidth(100);
         statisticsButton.setHeight(100);
-        statisticsButton.setPosition((Gdx.graphics.getWidth() - settingsButton.getWidth())/2, 100);
+        statisticsButton.setPosition((Gdx.graphics.getWidth() - 2.125f * settingsButton.getWidth())/2, 100);
         statisticsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -189,7 +235,22 @@ public class Menu extends ScreenAdapter {
                 whatToRender = Statistics;
             }
         });
-        menuStage.addActor(settingsButton);
+        menuStage.addActor(statisticsButton);
+
+        TextButton infoButton = new TextButton("", buttonStyles.get("info"));
+        infoButton.setTransform(true);
+        infoButton.setWidth(100);
+        infoButton.setHeight(100);
+        infoButton.setPosition((Gdx.graphics.getWidth() + 0.125f *  settingsButton.getWidth() )/2, 100);
+        infoButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.setInputProcessor(statisticsStage);
+                updateStatistics.accept(0);
+                whatToRender = Info;
+            }
+        });
+        menuStage.addActor(infoButton);
 
         Label title = new Label("Minesweeper+", labelStyles.get("title"));
         title.setColor(0, 0, 0, 1);
@@ -217,6 +278,11 @@ public class Menu extends ScreenAdapter {
     }
     void createOptionsMenu() {
         optionsStage = new Stage();
+        Label title = new Label("Settings", labelStyles.get("title"));
+        title.setColor(0, 0, 0, 1);
+        title.setFontScale(2, 2);
+        title.setPosition((Gdx.graphics.getWidth() - 2 * title.getWidth())/2, Gdx.graphics.getHeight() - title.getHeight() - 75);
+        optionsStage.addActor(title);
         TextButton exitButton = new TextButton("", buttonStyles.get("exit"));
         exitButton.setTransform(true);
         exitButton.setWidth(60);
@@ -305,16 +371,16 @@ public class Menu extends ScreenAdapter {
             nice[i].setHeight(60);
             nice[i+4].setWidth(60);
             nice[i+4].setHeight(60);
-            nice[i].setPosition(8*nice[i].getWidth(), 2*(i + 0.25f)*nice[i].getHeight());
-            nice[i+4].setPosition(7*nice[i].getWidth(), 2*(i + 0.25f)*nice[i+4].getHeight());
+            nice[i].setPosition(8.5f*nice[i].getWidth(), 1.5f*(i + 0.25f)*nice[i].getHeight());
+            nice[i+4].setPosition(7.5f*nice[i].getWidth(), 1.5f*(i + 0.25f)*nice[i+4].getHeight());
             nice[i+8].setWidth(240);
             nice[i+8].setHeight(60);
-            nice[i+8].setPosition(nice[i].getWidth(), 2*(i + 0.25f)*nice[i+4].getHeight());
+            nice[i+8].setPosition(1.5f*nice[i].getWidth(), 1.5f*(i + 0.25f)*nice[i+4].getHeight());
             nice[i+8].setColor(0.45f, 0.45f, 0.45f, 1f);
             nice[i+12].setColor(0.45f, 0.45f, 0.45f, 1f);
             nice[i+12].setWidth(60);
             nice[i+12].setHeight(60);
-            nice[i+12].setPosition(6*nice[i].getWidth(), 2*(i + 0.25f)*nice[i+4].getHeight());
+            nice[i+12].setPosition(6.5f*nice[i].getWidth(), 1.5f*(i + 0.25f)*nice[i+4].getHeight());
             optionsStage.addActor(nice[i]);
             optionsStage.addActor(nice[i+4]);
             optionsStage.addActor(nice[i+8]);
@@ -403,6 +469,12 @@ public class Menu extends ScreenAdapter {
     void createStatisticsMenu() {
         statisticsStage = new Stage();
 
+        Label title = new Label("Statistics", labelStyles.get("title"));
+        title.setColor(0, 0, 0, 1);
+        title.setFontScale(2, 2);
+        title.setPosition((Gdx.graphics.getWidth() - 2 * title.getWidth())/2, Gdx.graphics.getHeight() - title.getHeight() - 125);
+        statisticsStage.addActor(title);
+
         TextButton exitButton = new TextButton("", buttonStyles.get("exit"));
         exitButton.setTransform(true);
         exitButton.setWidth(60);
@@ -453,12 +525,12 @@ public class Menu extends ScreenAdapter {
         for (int i = 0; i < 3; i++ ) {
             nice[i].setWidth(240);
             nice[i].setHeight(60);
-            nice[i].setPosition(0.5f * nice[i].getWidth(), 2 * (i + 0.5f) * nice[i].getHeight());
+            nice[i].setPosition(0.625f * nice[i].getWidth(), 1.5f * (i + 0.5f) * nice[i].getHeight());
             nice[i].setColor(0.45f, 0.45f, 0.45f, 1f);
 
             nice[i + 3].setWidth(60);
             nice[i + 3].setHeight(60);
-            nice[i + 3].setPosition(1.75f * nice[i].getWidth(), 2 * (i + 0.5f) * nice[i].getHeight());
+            nice[i + 3].setPosition(1.875f * nice[i].getWidth(), 1.5f * (i + 0.5f) * nice[i].getHeight());
             nice[i + 3].setColor(0.45f, 0.45f, 0.45f, 1f);
 
             statisticsStage.addActor(nice[i]);
@@ -483,6 +555,7 @@ public class Menu extends ScreenAdapter {
         createGameMenu();
         createOptionsMenu();
         createStatisticsMenu();
+        createGameInfo();
         Gdx.input.setInputProcessor(menuStage);
         menuStage.draw();
     }
@@ -523,6 +596,10 @@ public class Menu extends ScreenAdapter {
                     statisticsStage.act(delta);
                     statisticsStage.draw();
                 }
+                else if (whatToRender == Info) {
+                    gameInfoStage.act(delta);
+                    gameInfoStage.draw();
+                }
             }
         } catch (Exception ignored) {}
     }
@@ -533,6 +610,7 @@ public class Menu extends ScreenAdapter {
         gameMenuStage.getViewport().update(width, height, true);
         optionsStage.getViewport().update(width, height, true);
         statisticsStage.getViewport().update(width, height, true);
+        gameInfoStage.getViewport().update(width, height, true);
     }
 
     @Override
