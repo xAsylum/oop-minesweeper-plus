@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import minesweeper.plus.core.Coordinates;
 import minesweeper.plus.core.OutOfBoundsException;
@@ -185,6 +186,7 @@ public class Menu extends ScreenAdapter {
                 "\nDon't forget to save your progress!",
                 labelStyles.get("title"));
         title.setColor(0, 0, 0, 1);
+        title.setAlignment(Align. center);
         title.setFontScale(1, 1);
         title.setPosition(50, Gdx.graphics.getHeight() - title.getHeight() - 125);
         gameInfoStage.addActor(title);
