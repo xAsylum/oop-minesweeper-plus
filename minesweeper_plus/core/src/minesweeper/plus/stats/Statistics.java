@@ -1,5 +1,6 @@
 package minesweeper.plus.stats;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,12 +8,30 @@ import java.util.Map;
 public class Statistics {
     Map<String, StatsOut> stats;
     public Statistics() {
-        this.stats = new HashMap<>();
+        try {
+            this.stats = WorkWithFiles.loadStats();
+        }
+        catch (Exception ignored) {
+            this.stats = new HashMap<>();
+        }
     }
     void init(StatsIn s) {
         if((stats.get(s.toString()) == null)) {
             stats.put(s.toString(), new StatsOut());
             //System.out.println("adding");
+        }
+    }
+    public void delete() {
+        try {
+            stats = new HashMap<>();
+            WorkWithFiles.saveStats(stats);
+        } catch (IOException ignored) {
+        }
+    }
+    public void save() {
+        try {
+            WorkWithFiles.saveStats(stats);
+        } catch (IOException ignored) {
         }
     }
     public void won(StatsIn s) {

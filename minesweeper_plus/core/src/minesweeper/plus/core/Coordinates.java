@@ -24,6 +24,6 @@ public class Coordinates {
     }
     @Override
     public String toString() {
-        return "(" + xValue + ", " + yValue + ", " + zValue + ")";
+        return xValue + "," + yValue + "," + zValue;
     }
 }

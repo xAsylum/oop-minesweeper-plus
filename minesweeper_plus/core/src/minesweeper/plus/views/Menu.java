@@ -7,15 +7,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -42,7 +39,7 @@ public class Menu extends ScreenAdapter {
     }
 
     MenuToRender whatToRender = MainMenu;
-    Statistics stats = new Statistics();;
+    Statistics stats = new Statistics();
     View view;
     SimpleBoard board;
     int level=0;
@@ -83,6 +80,19 @@ public class Menu extends ScreenAdapter {
         statsButtonStyle.down = new TextureRegionDrawable(new Texture("menu_button_statistics.png"));
         statsButtonStyle.font = font;
         buttonStyles.put("statistics", statsButtonStyle);
+
+        TextButtonStyle deleteButtonStyle = new TextButtonStyle();
+        deleteButtonStyle.up = new TextureRegionDrawable(new Texture("menu_button_delete.png"));
+        deleteButtonStyle.down = new TextureRegionDrawable(new Texture("menu_button_delete.png"));
+        deleteButtonStyle.font = font;
+        buttonStyles.put("delete", deleteButtonStyle);
+
+
+        TextButtonStyle saveButtonStyle = new TextButtonStyle();
+        saveButtonStyle.up = new TextureRegionDrawable(new Texture("menu_button_save.png"));
+        saveButtonStyle.down = new TextureRegionDrawable(new Texture("menu_button_save.png"));
+        saveButtonStyle.font = font;
+        buttonStyles.put("save", saveButtonStyle);
 
         TextButtonStyle settingsButtonStyle = new TextButtonStyle();
         settingsButtonStyle.up = new TextureRegionDrawable(new Texture("menu_settings_button.png"));
@@ -406,6 +416,31 @@ public class Menu extends ScreenAdapter {
         });
         statisticsStage.addActor(exitButton);
 
+        TextButton saveButton = new TextButton("", buttonStyles.get("save"));
+        saveButton.setTransform(true);
+        saveButton.setWidth(60);
+        saveButton.setHeight(60);
+        saveButton.setPosition(Gdx.graphics.getWidth() - 2 * exitButton.getWidth() - 2, Gdx.graphics.getHeight() - exitButton.getHeight() * 1.1f);
+        saveButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                stats.save();
+            }
+        });
+        statisticsStage.addActor(saveButton);
+
+        TextButton deleteButton = new TextButton("", buttonStyles.get("delete"));
+        deleteButton.setTransform(true);
+        deleteButton.setWidth(60);
+        deleteButton.setHeight(60);
+        deleteButton.setPosition(Gdx.graphics.getWidth() - 3 * exitButton.getWidth() - 2, Gdx.graphics.getHeight() - exitButton.getHeight() * 1.1f);
+        deleteButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                stats.delete();
+                updateStatistics.accept(0);
+            }
+        });
+        statisticsStage.addActor(deleteButton);
+
         TextButton winsLabel = new TextButton("Games won", buttonStyles.get("block_long"));
         TextButton losesLabel = new TextButton("Games lost", buttonStyles.get("block_long"));
         TextButton totalLabel = new TextButton("Total", buttonStyles.get("block_long"));
@@ -414,7 +449,7 @@ public class Menu extends ScreenAdapter {
         TextButton loses = new TextButton(String.valueOf(getLooses()), buttonStyles.get("block"));
         TextButton total = new TextButton(String.valueOf(getTotal()), buttonStyles.get("block"));
 
-        TextButton nice[] = {totalLabel, losesLabel, winsLabel, total, loses, wins};
+        TextButton[] nice = {totalLabel, losesLabel, winsLabel, total, loses, wins};
         for (int i = 0; i < 3; i++ ) {
             nice[i].setWidth(240);
             nice[i].setHeight(60);
