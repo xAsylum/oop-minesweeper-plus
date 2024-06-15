@@ -7,12 +7,15 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -28,15 +31,18 @@ import java.util.function.Consumer;
 import static com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.*;
 import static minesweeper.plus.views.Menu.MenuToRender.*;
 
+import minesweeper.plus.stats.*;
+
 public class Menu extends ScreenAdapter {
 
     enum MenuToRender {
-      MainMenu,
-      Options
+        MainMenu,
+        Options,
+        Statistics
     }
 
     MenuToRender whatToRender = MainMenu;
-
+    Statistics stats = new Statistics();;
     View view;
     SimpleBoard board;
     int level=0;
@@ -44,9 +50,11 @@ public class Menu extends ScreenAdapter {
     private Stage menuStage;
     private Stage gameMenuStage;
     private Stage optionsStage;
+    private Stage statisticsStage;
     boolean printLevel = false;
     boolean createdLevel = false;
     private Consumer<Integer> updateBlock;
+    private Consumer<Integer> updateStatistics;
     Map<String, TextButtonStyle> buttonStyles;
     Map<String, LabelStyle> labelStyles;
     private Integer boardX = 10, boardY = 10, boardZ = 2, boardBombsCount = 21;
@@ -69,6 +77,12 @@ public class Menu extends ScreenAdapter {
         playButtonStyle.down = new TextureRegionDrawable(new Texture("menu_button_play.png"));
         playButtonStyle.font = font;
         buttonStyles.put("play", playButtonStyle);
+
+        TextButtonStyle statsButtonStyle = new TextButtonStyle();
+        statsButtonStyle.up = new TextureRegionDrawable(new Texture("menu_button_statistics.png"));
+        statsButtonStyle.down = new TextureRegionDrawable(new Texture("menu_button_statistics.png"));
+        statsButtonStyle.font = font;
+        buttonStyles.put("statistics", statsButtonStyle);
 
         TextButtonStyle settingsButtonStyle = new TextButtonStyle();
         settingsButtonStyle.up = new TextureRegionDrawable(new Texture("menu_settings_button.png"));
@@ -128,7 +142,7 @@ public class Menu extends ScreenAdapter {
         playButton.setTransform(true);
         playButton.setWidth(100);
         playButton.setHeight(100);
-        playButton.setPosition(200, 100);
+        playButton.setPosition(100, 100);
         playButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 createdLevel = false;
@@ -141,12 +155,28 @@ public class Menu extends ScreenAdapter {
         settingsButton.setTransform(true);
         settingsButton.setWidth(100);
         settingsButton.setHeight(100);
-        settingsButton.setPosition(Gdx.graphics.getWidth() - 2 * settingsButton.getWidth() - 100, 100);
+        settingsButton.setPosition(Gdx.graphics.getWidth() - 2 * settingsButton.getWidth(), 100);
         settingsButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.input.setInputProcessor(optionsStage);
                 whatToRender = Options;
+            }
+        });
+        menuStage.addActor(settingsButton);
+
+        TextButton statisticsButton = new TextButton("", buttonStyles.get("statistics"));
+        menuStage.addActor(statisticsButton);
+        statisticsButton.setTransform(true);
+        statisticsButton.setWidth(100);
+        statisticsButton.setHeight(100);
+        statisticsButton.setPosition((Gdx.graphics.getWidth() - settingsButton.getWidth())/2, 100);
+        statisticsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.setInputProcessor(statisticsStage);
+                updateStatistics.accept(0);
+                whatToRender = Statistics;
             }
         });
         menuStage.addActor(settingsButton);
@@ -322,6 +352,14 @@ public class Menu extends ScreenAdapter {
         exitButton.setPosition(Gdx.graphics.getWidth() - exitButton.getWidth() - 2, Gdx.graphics.getHeight() - exitButton.getHeight() * 1.1f);
         exitButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
+                if(board.won()) {
+                    //System.out.println("won");
+                    stats.won(new StatsIn(new Coordinates(boardX, boardY, boardZ), boardBombsCount));
+                }
+                if(!board.alive()) {
+                    //System.out.println("lost");
+                    stats.lost(new StatsIn(new Coordinates(boardX, boardY, boardZ), boardBombsCount));
+                }
                 printLevel = false;
                 Gdx.input.setInputProcessor(menuStage);
             }
@@ -343,6 +381,64 @@ public class Menu extends ScreenAdapter {
         gameMenuStage.addActor(downButton);
         gameMenuStage.addActor(exitButton);
     }
+    int getWins() {
+        return stats.getWins(new StatsIn(new Coordinates(boardX, boardY, boardZ), boardBombsCount));
+    }
+    int getLooses() {
+        return stats.getLooses(new StatsIn(new Coordinates(boardX, boardY, boardZ), boardBombsCount));
+    }
+    int getTotal() {
+        return getWins() + getLooses();
+    }
+    void createStatisticsMenu() {
+        statisticsStage = new Stage();
+
+        TextButton exitButton = new TextButton("", buttonStyles.get("exit"));
+        exitButton.setTransform(true);
+        exitButton.setWidth(60);
+        exitButton.setHeight(60);
+        exitButton.setPosition(Gdx.graphics.getWidth() - exitButton.getWidth() - 2, Gdx.graphics.getHeight() - exitButton.getHeight() * 1.1f);
+        exitButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.input.setInputProcessor(menuStage);
+                whatToRender = MainMenu;
+            }
+        });
+        statisticsStage.addActor(exitButton);
+
+        TextButton winsLabel = new TextButton("Games won", buttonStyles.get("block_long"));
+        TextButton losesLabel = new TextButton("Games lost", buttonStyles.get("block_long"));
+        TextButton totalLabel = new TextButton("Total", buttonStyles.get("block_long"));
+
+        TextButton wins = new TextButton(String.valueOf(getWins()), buttonStyles.get("block"));
+        TextButton loses = new TextButton(String.valueOf(getLooses()), buttonStyles.get("block"));
+        TextButton total = new TextButton(String.valueOf(getTotal()), buttonStyles.get("block"));
+
+        TextButton nice[] = {totalLabel, losesLabel, winsLabel, total, loses, wins};
+        for (int i = 0; i < 3; i++ ) {
+            nice[i].setWidth(240);
+            nice[i].setHeight(60);
+            nice[i].setPosition(0.5f * nice[i].getWidth(), 2 * (i + 0.5f) * nice[i].getHeight());
+            nice[i].setColor(0.45f, 0.45f, 0.45f, 1f);
+
+            nice[i + 3].setWidth(60);
+            nice[i + 3].setHeight(60);
+            nice[i + 3].setPosition(1.75f * nice[i].getWidth(), 2 * (i + 0.5f) * nice[i].getHeight());
+            nice[i + 3].setColor(0.45f, 0.45f, 0.45f, 1f);
+
+            statisticsStage.addActor(nice[i]);
+
+            statisticsStage.addActor(nice[i + 3]);
+        }
+        updateStatistics = integer -> {
+            wins.setText(String.valueOf(getWins()));
+            loses.setText(String.valueOf(getLooses()));
+            total.setText(String.valueOf(getTotal()));
+            //System.out.println("update");
+        };
+        updateStatistics.accept(0);
+    }
+
 
     @Override
     public void show() {
@@ -351,7 +447,7 @@ public class Menu extends ScreenAdapter {
         createMenu();
         createGameMenu();
         createOptionsMenu();
-
+        createStatisticsMenu();
         Gdx.input.setInputProcessor(menuStage);
         menuStage.draw();
     }
@@ -388,6 +484,10 @@ public class Menu extends ScreenAdapter {
                     optionsStage.act(delta);
                     optionsStage.draw();
                 }
+                else if (whatToRender == Statistics) {
+                    statisticsStage.act(delta);
+                    statisticsStage.draw();
+                }
             }
         } catch (Exception ignored) {}
     }
@@ -397,6 +497,7 @@ public class Menu extends ScreenAdapter {
         menuStage.getViewport().update(width, height, true);
         gameMenuStage.getViewport().update(width, height, true);
         optionsStage.getViewport().update(width, height, true);
+        statisticsStage.getViewport().update(width, height, true);
     }
 
     @Override
