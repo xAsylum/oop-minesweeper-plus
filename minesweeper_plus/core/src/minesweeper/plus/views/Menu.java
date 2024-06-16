@@ -58,6 +58,7 @@ public class Menu extends ScreenAdapter {
     Map<String, TextButtonStyle> buttonStyles;
     Map<String, LabelStyle> labelStyles;
     private Integer boardX = 10, boardY = 10, boardZ = 2, boardBombsCount = 21;
+
     void setupFonts() {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("pixelFont.ttf"));
         FreeTypeFontParameter parameter = new FreeTypeFontParameter();
@@ -89,7 +90,6 @@ public class Menu extends ScreenAdapter {
         deleteButtonStyle.down = new TextureRegionDrawable(new Texture("menu_button_delete.png"));
         deleteButtonStyle.font = font;
         buttonStyles.put("delete", deleteButtonStyle);
-
 
         TextButtonStyle saveButtonStyle = new TextButtonStyle();
         saveButtonStyle.up = new TextureRegionDrawable(new Texture("menu_button_save.png"));
@@ -144,7 +144,6 @@ public class Menu extends ScreenAdapter {
         exitStyle.down = new TextureRegionDrawable(new Texture("game_button_exit.png"));
         exitStyle.font = new BitmapFont();
         buttonStyles.put("exit", exitStyle);
-
 
         TextButtonStyle infoStyle = new TextButtonStyle();
         infoStyle.up = new TextureRegionDrawable(new Texture("game_button_info.png"));
@@ -273,11 +272,11 @@ public class Menu extends ScreenAdapter {
             level = 0;
             updateBlock.accept(0);
         } catch (OutOfBoundsException e) {
-            //System.out.println("Wrong starting conditions");
             createdLevel = false;
             printLevel = false;
         }
     }
+
     void createOptionsMenu() {
         optionsStage = new Stage();
         Label title = new Label("Settings", labelStyles.get("title"));
@@ -389,6 +388,7 @@ public class Menu extends ScreenAdapter {
             optionsStage.addActor(nice[i+12]);
         }
     }
+
     void createGameMenu() {
         gameMenuStage = new Stage();
 
@@ -431,11 +431,9 @@ public class Menu extends ScreenAdapter {
         exitButton.addListener(new ClickListener() {
             public void clicked(InputEvent event, float x, float y) {
                 if(board.won()) {
-                    //System.out.println("won");
                     stats.won(new StatsIn(new Coordinates(boardX, boardY, boardZ), boardBombsCount));
                 }
                 if(!board.alive()) {
-                    //System.out.println("lost");
                     stats.lost(new StatsIn(new Coordinates(boardX, boardY, boardZ), boardBombsCount));
                 }
                 printLevel = false;
@@ -459,15 +457,19 @@ public class Menu extends ScreenAdapter {
         gameMenuStage.addActor(downButton);
         gameMenuStage.addActor(exitButton);
     }
+
     int getWins() {
         return stats.getWins(new StatsIn(new Coordinates(boardX, boardY, boardZ), boardBombsCount));
     }
+
     int getLooses() {
         return stats.getLooses(new StatsIn(new Coordinates(boardX, boardY, boardZ), boardBombsCount));
     }
+
     int getTotal() {
         return stats.getTotal(new StatsIn(new Coordinates(boardX, boardY, boardZ), boardBombsCount));
     }
+
     void createStatisticsMenu() {
         statisticsStage = new Stage();
 
@@ -543,11 +545,9 @@ public class Menu extends ScreenAdapter {
             wins.setText(String.valueOf(getWins()));
             loses.setText(String.valueOf(getLooses()));
             total.setText(String.valueOf(getTotal()));
-            //System.out.println("update");
         };
         updateStatistics.accept(0);
     }
-
 
     @Override
     public void show() {
@@ -564,7 +564,6 @@ public class Menu extends ScreenAdapter {
 
     @Override
     public void render (float delta) {
-
         try {
             if (printLevel) {
                 if(!createdLevel) {
@@ -618,4 +617,3 @@ public class Menu extends ScreenAdapter {
     @Override
     public void dispose () {}
 }
-
